@@ -10,20 +10,30 @@ toc_footers:
 search: true
 ---
 
-# Fast Object-Oriented HTML templating With Python!
+# TemPy Overview
 
-### What
+**Fast Object-Oriented HTML templating With Python!**
+
+## What 
 Build HTML without writing a single tag.
-TemPy dynamically generates HTML and accesses it in a pure Python or jQuery fashion. Navigating the DOM and manipulating tags is also possible in a Python or jQuery-similar sintax.
 
-### Why?
+TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage "HTML" templates and objects in a pure Python.
+Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the `render()` method on the root element.
+
+TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.
+
+## Why?
 HTML is like SQL: we all use it, we know it works, we all recognize it's important, but our biggest dream is to never write a single line of it again. For SQL we have ORM's, but we're not there yet for HTML.
+
 Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..
+
 ..so the idea of TemPy.
 
-### Weeeeeeee!
+## Speed
+
+One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
+
 No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.
-See below for benchmarks against other templating engines.
 
 # Installation
 
