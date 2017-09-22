@@ -104,13 +104,30 @@ page.render()
 >>> </html>
 ```
 
-TemPy offers clean syntax for building pages in pure python. Just make tags instantiating TemPy objects..
+TemPy offers clean syntax for building pages in pure python. Every TemPy object can be a container of other objects, and can be arrenged togheter to build a tree.
 
-..add tags and content to your TemPy objects later..
+Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: `div = Div()` will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.
 
-..and then render your TemPy html object
+Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it's a function: `div(Span())`. Element creation and insertion can be performed in a single instruction: `Div()(Span())`.
+
+It's possible to add multiple elements inside another and every TemPy object accepts different kind of element insertion:
+
+* single insertion: `Div()(Span())`
+* list insertion: `Div()(['something', Span(), 1])`
+* insetion from a generator: `Div()(Span() for _ in range(5))`
+* named insertion: `Div()(some_child=Span())` **Attention: named insertion is safe only when using Python >= 3.6**
+* using the TemPy objects's API: `Div().append((Span())` *see below for a complete API listing*
+
+HTML tags have attributes, and so TemPy tags have too. It's possible to define tag attributes in different ways:
+
+* during the element instantiation: `Div(some_attribute='some_value')`
+* usind the `attr` API: `Div().attr(some_attribute='some_value')`
 
 
+The resulting tree (in fact, the DOM), can be rendered by calling the `.render()` method.
+
+Calling `render` on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
+`render` will be called on every TemPy child, and `str()` will be called on every non-TemPy child.
 
 ## Building blocks
 
