@@ -299,29 +299,72 @@ class MyClass:
     class HomePage(TempyREPR):
         def repr(self):  # note: here self is the object's parent, not the root
             self('Hello World, this is bar: ', self.bar)
+
+
+my_instance = MyClass()
+
+Div()(my_instance).render()  # my_instance is rendered using Div(TempyREPR) nested class
+
+A()(my_instance).render()  # my_instance is rendered using A(TempyREPR) nested class
+
+Table()(Tr()(Td()(my_instance))).render()  # my_instance is rendered using Td(TempyREPR) nested class
+
+class HomePage(Html): pass
+
+HomePage()(
+    Head()(),
+    Body()(
+        Div()(
+            H1()(my_instance)
+        )
+    )
+).render()  # my_instance is rendered using HomePage(TempyREPR) nested class
 ```
 
-Another way to use TemPy is to define a nested `TempyREPR` class inside your classes:
+Another way to use TemPy is to define a nested `TempyREPR` subclass inside your own classes.
 
-You can think the `TempyREPR` as a `__repr__` equivalent, so when an instance is placed inside a TemPy tree, the `TempyREPR` subclass is used to render the instance.
+You can think the `TempyREPR` nested class as a `__repr__` magic method equivalent: TemPy uses the `TempyREPR` nested class to represent objects just like Python uses the `__repr__` method.
+
+When an object is placed inside a tree TemPy searches for a `TempyREPR` class inside this object, if it's found, the `repr` method of this class is used as a template.
+The `TempyREPR.repr` method accepts `self` as the only argument, with a little magic this `self` is both your object and the tree element, so all the common TemPy API is usable and your object attributes are accessible using `self`.
 
 You can define several `TempyREPR` nested classes, when dealing with non-TemPy object TemPy will search for a `TempyREPR` subclass following this priority:
 
-* a `TempyREPR` subclass with the same name of his TemPy container
-* a `TempyREPR` subclass with the same name of his TemPy container's root
-* a `TempyREPR` subclass named `HtmlREPR`
-* the first `TempyREPR` found.
-* if none of the previous if found, the object will be rendered calling his `__str__` method
+1. a `TempyREPR` subclass with the same name of his TemPy container
+2. a `TempyREPR` subclass with the same name of his TemPy container's root
+3. a `TempyREPR` subclass named `HtmlREPR`
+4. the first `TempyREPR` found.
+5. if none of the previous if found, the object will be rendered calling his `__str__` method
 
-You can use this order to set different renderings for different situation/pages:
-
-
+You can use this order to set different renderings for different situation/pages.
 
 # Elements api
 
 ```python
 page = Html()
->>> <html></html>
+div = Div()
+
+new_page = page.clone()
+
+new_page_2 = page + div
+new_page_3 = new_page_2 - div
+list_of_5_divs = div * 5
+```
+```python
+div = Div(id='my_html_id', klass='someHtmlClass') # 'klass' because 'class' is a Python's buildin keyword
+>>> <div id="my_dom_id" class="someHtmlClass"></div>
+
+a = A(klass='someHtmlClass')('text of this link')
+a.attr(id='another_dom_id')
+a.attr({'href': 'www.thisisalink.com'})
+>>> <a id="another_dom_id" class="someHtmlClass" href="www.thisisalink.com">text of this link</a>
+```
+
+```python
+div2.css(width='100px', float='left')
+div2.css({'height': '100em'})
+div2.css('background-color', 'blue')
+>>> <div id="another_dom_id" class="someHtmlClass comeOtherClass" style="width: 100px; float: left; height: 100em; background-color: blue"></div>
 ```
 
 ```python
@@ -376,7 +419,41 @@ div1.prev_all(div2)
 div1.siblings(div2)
 div1.slice(div2)
 ```
-Create DOM elements by instantiating tags:
+
+## Tag Creation 
+
+Create DOM elements by instantiating tag classes. Those elemets are nodes in the DOM tree and can be attached, detached, moved and composed togheter dynamically.
+
+There are other 2 ways to create TemPy objects:
+
+* using the `clone()` API
+* adding subtracting or multiplying TemPy objects
+
+
+## Tag Attributes 
+
+HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) `Div(my_html_Attribute='my_html_attribute_value')` or later using the API.
+
+TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign `bool`, `True` or `False` to the attribute in TemPy: `Div(norma_attribute='foo', boolean_attribute=bool)` (a boolean attribute with `False` value will not be rendered).
+
+TemPy supports multiple, space separated, attributes like the HTML `class` attribute. In TemPy these are attributes that should contain iterables.
+
+Few axceptions are needed, for some common HTML attributes names (i.e: 'class', 'type', etc..) are Python native keyword and can not be used as argument names, those are mapped to custom TemPy names:
+
+* `klass` -> 'class'
+* `typ` -> 'type'
+* `_for` -> 'for'
+
+Another kind of managed attributes are the mapping kind, like the `style` tag attribute. Style can be managed using passing a dictionary to the `style` attribute directly (`Div(style={'background-color': 'blue'})`), or can be edited in the jQuery fashion with the `.css()` method.
+
+The `css` method mimic the jQuery's brother behavior:
+
+* called with no arguments returns the style dictionary: `Div(style={'color': 'white'}).css() -returns-> {'color': 'white'}`
+* called with a dict as the only unnamed argument will `dict.update` the element's style with the given imput: `Div().css({'color': 'white'})`
+* called with kwargs will `dict.update` the element's style with the given kwargs: `Div().css(color='white')`
+
+
+## Tag insertion: building the DOM
 
 Add elements or content by calling them like a function...
 
@@ -410,62 +487,6 @@ Several api's are provided to modify you're existing DOM elements:
 * prev_all() - 
 * siblings() - 
 * slice() - 
-
-# Tag Attributes 
-```python
-div = Div(id='my_html_id', klass='someHtmlClass') # 'klass' because 'class' is a Python's buildin keyword
->>> <div id="my_dom_id" class="someHtmlClass"></div>
-
-a = A(klass='someHtmlClass')('text of this link')
-a.attr(id='another_dom_id')
-a.attr({'href': 'www.thisisalink.com'})
->>> <a id="another_dom_id" class="someHtmlClass" href="www.thisisalink.com">text of this link</a>
-```
-
-```python
-div2.css(width='100px', float='left')
-div2.css({'height': '100em'})
-div2.css('background-color', 'blue')
->>> <div id="another_dom_id" class="someHtmlClass comeOtherClass" style="width: 100px; float: left; height: 100em; background-color: blue"></div>
-```
-
-```python
-divs = [Div(id=div, klass='inner') for div in range(10)]
-ps = (P() for _ in range(10))
-container_div = Div()(divs)
-
-for i, div in enumerate(container_div):
-    div.attr(id='divId'+str(i))
-container_div[0].append(ps)
-container_div[0][4].attr(id='pId')
->>> <div>
->>>     <div id="divId0">
->>>         <p></p>
->>>         <p></p>
->>>         <p></p>
->>>         <p></p>
->>>         <p id="pId"></p>
->>>         <p></p>
->>>         <p></p>
->>>         <p></p>
->>>         <p></p>
->>>         <p></p>
->>>     </div>
->>>     <div id="divId1"></div>
->>>     <div id="divId2"></div>
->>>     <div id="divId3"></div>
->>>     <div id="divId4"></div>
->>>     <div id="divId5"></div>
->>>     <div id="divId6"></div>
->>>     <div id="divId7"></div>
->>>     <div id="divId8"></div>
->>>     <div id="divId9"></div>
->>> </div>
-```
-
-Add attributes to every element at definition time or later.
-
-Styles are editable in the jQuery fashion:
 
 # DOM navigation
 ```python
