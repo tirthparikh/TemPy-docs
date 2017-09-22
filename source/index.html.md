@@ -340,6 +340,8 @@ You can use this order to set different renderings for different situation/pages
 
 # Elements api
 
+## Tag Creation 
+
 ```python
 page = Html()
 div = Div()
@@ -350,6 +352,17 @@ new_page_2 = page + div
 new_page_3 = new_page_2 - div
 list_of_5_divs = div * 5
 ```
+
+Create DOM elements by instantiating tag classes. Those elemets are nodes in the DOM tree and can be attached, detached, moved and composed togheter dynamically.
+
+There are other 2 ways to create TemPy objects:
+
+* using the `clone()` API
+* adding subtracting or multiplying TemPy objects
+
+
+## Tag Attributes 
+
 ```python
 div = Div(id='my_html_id', klass='someHtmlClass') # 'klass' because 'class' is a Python's buildin keyword
 >>> <div id="my_dom_id" class="someHtmlClass"></div>
@@ -366,6 +379,29 @@ div2.css({'height': '100em'})
 div2.css('background-color', 'blue')
 >>> <div id="another_dom_id" class="someHtmlClass comeOtherClass" style="width: 100px; float: left; height: 100em; background-color: blue"></div>
 ```
+
+HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) `Div(my_html_Attribute='my_html_attribute_value')` or later using the API.
+
+TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign `bool`, `True` or `False` to the attribute in TemPy: `Div(norma_attribute='foo', boolean_attribute=bool)` (a boolean attribute with `False` value will not be rendered).
+
+TemPy supports multiple, space separated, attributes like the HTML `class` attribute. In TemPy these are attributes that should contain iterables.
+
+Few axceptions are needed, for some common HTML attributes names (i.e: 'class', 'type', etc..) are Python native keyword and can not be used as argument names, those are mapped to custom TemPy names:
+
+* `klass` -> 'class'
+* `typ` -> 'type'
+* `_for` -> 'for'
+
+Another kind of managed attributes are the mapping kind, like the `style` tag attribute. Style can be managed using passing a dictionary to the `style` attribute directly (`Div(style={'background-color': 'blue'})`), or can be edited in the jQuery fashion with the `.css()` method.
+
+The `css` method mimic the jQuery's brother behavior:
+
+* called with no arguments returns the style dictionary: `Div(style={'color': 'white'}).css() -returns-> {'color': 'white'}`
+* called with a dict as the only unnamed argument will `dict.update` the element's style with the given imput: `Div().css({'color': 'white'})`
+* called with kwargs will `dict.update` the element's style with the given kwargs: `Div().css(color='white')`
+
+
+## Tag insertion: building the DOM
 
 ```python
 page(Head())
@@ -390,6 +426,15 @@ body.empty()
 page.pop()
 >>> <html></html>
 ```
+
+
+Add elements or content by calling them like a function...
+
+...or use one of the jQuery-like apis:
+
+...same for removing:
+
+## Complete API Reference
 
 ```python
 div1 = Div()
@@ -419,47 +464,6 @@ div1.prev_all(div2)
 div1.siblings(div2)
 div1.slice(div2)
 ```
-
-## Tag Creation 
-
-Create DOM elements by instantiating tag classes. Those elemets are nodes in the DOM tree and can be attached, detached, moved and composed togheter dynamically.
-
-There are other 2 ways to create TemPy objects:
-
-* using the `clone()` API
-* adding subtracting or multiplying TemPy objects
-
-
-## Tag Attributes 
-
-HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) `Div(my_html_Attribute='my_html_attribute_value')` or later using the API.
-
-TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign `bool`, `True` or `False` to the attribute in TemPy: `Div(norma_attribute='foo', boolean_attribute=bool)` (a boolean attribute with `False` value will not be rendered).
-
-TemPy supports multiple, space separated, attributes like the HTML `class` attribute. In TemPy these are attributes that should contain iterables.
-
-Few axceptions are needed, for some common HTML attributes names (i.e: 'class', 'type', etc..) are Python native keyword and can not be used as argument names, those are mapped to custom TemPy names:
-
-* `klass` -> 'class'
-* `typ` -> 'type'
-* `_for` -> 'for'
-
-Another kind of managed attributes are the mapping kind, like the `style` tag attribute. Style can be managed using passing a dictionary to the `style` attribute directly (`Div(style={'background-color': 'blue'})`), or can be edited in the jQuery fashion with the `.css()` method.
-
-The `css` method mimic the jQuery's brother behavior:
-
-* called with no arguments returns the style dictionary: `Div(style={'color': 'white'}).css() -returns-> {'color': 'white'}`
-* called with a dict as the only unnamed argument will `dict.update` the element's style with the given imput: `Div().css({'color': 'white'})`
-* called with kwargs will `dict.update` the element's style with the given kwargs: `Div().css(color='white')`
-
-
-## Tag insertion: building the DOM
-
-Add elements or content by calling them like a function...
-
-...or use one of the jQuery-like apis:
-
-...same for removing:
 
 Several api's are provided to modify you're existing DOM elements:
 
