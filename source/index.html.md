@@ -607,7 +607,9 @@ Performance difference is even higher in Jinja2 plain (no Flask) rendering:
 
 # Credits
 
-## Made and mantained by Federico Cerchiari / [Hrabal](https://github.com/Hrabal)
+## Made and mantained by Federico Cerchiari
+
+Get in touch on GitHub: [Hrabal](https://github.com/Hrabal)
 
 Get in touch using Slack: [tempy-dev.slack.com](https://tempy-dev.slack.com/messages)
 
