@@ -276,27 +276,33 @@
             <a href="#performance" class="toc-h1 toc-link" data-title="Performance">Performance</a>
           </li>
           <li>
-            <a href="#credits-made-and-mantained-by-federico-cerchiari-hrabal" class="toc-h1 toc-link" data-title="Credits: made and mantained by Federico Cerchiari / Hrabal">Credits: made and mantained by Federico Cerchiari / Hrabal</a>
+            <a href="#credits" class="toc-h1 toc-link" data-title="Credits">Credits</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#contribute" class="toc-h2 toc-link" data-title="Credits: made and mantained by Federico Cerchiari / Hrabal">Contribute.</a>
+                    <a href="#made-and-mantained-by-federico-cerchiari-a-href-https-github-com-hrabal-hrabal-a" class="toc-h2 toc-link" data-title="Credits">Made and mantained by Federico Cerchiari / <a href="https://github.com/Hrabal">Hrabal</a></a>
+                  </li>
+                  <li>
+                    <a href="#contribute" class="toc-h2 toc-link" data-title="Credits">Contribute</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#project" class="toc-h1 toc-link" data-title="Project">Project</a>
+            <a href="#project-info" class="toc-h1 toc-link" data-title="Project Info">Project Info</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#compatibility" class="toc-h2 toc-link" data-title="Project">Compatibility</a>
+                    <a href="#compatibility" class="toc-h2 toc-link" data-title="Project Info">Compatibility</a>
                   </li>
                   <li>
-                    <a href="#status" class="toc-h2 toc-link" data-title="Project">Status</a>
+                    <a href="#status" class="toc-h2 toc-link" data-title="Project Info">Status</a>
                   </li>
               </ul>
           </li>
+          <li>
+            <a href="#apache-2-0" class="toc-h1 toc-link" data-title="Apache 2.0">Apache 2.0</a>
+          </li>
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Get in touch using SLACK!</a></li>
+            <li><h2><a href='https://tempy-dev.slack.com/messages'>Get in touch using SLACK!</a></h2></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -352,7 +358,7 @@ Navigating the DOM and manipulating tags is possible in a Python or jQuery-simil
 
 <p>..so the idea of TemPy.</p>
 <h2 id='speed'>Speed</h2>
-<p>One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.</p>
+<p>One of the main slow-speed factors when developing webapps are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.</p>
 
 <p>No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.</p>
 <h1 id='installation'>Installation</h1><pre class="highlight shell tab-shell"><code>pip3 install tem-py
@@ -848,25 +854,37 @@ Transfer/sec:      3.63MB</p>
 
 <p>Performance difference is even higher in Jinja2 plain (no Flask) rendering:
 <img src="images/bench_plain.jpg" alt="TemPy No-Web Rednering" /></p>
-<h1 id='credits-made-and-mantained-by-federico-cerchiari-hrabal'>Credits: made and mantained by Federico Cerchiari / Hrabal</h1><h3 id='contribute'>Contribute.</h3>
-<p>Any contribution is welcome. Please refer to the <a href="CONTRIBUTING.md">contributing page</a>.</p>
-<h1 id='project'>Project</h1><h2 id='compatibility'>Compatibility</h2>
+<h1 id='credits'>Credits</h1><h2 id='made-and-mantained-by-federico-cerchiari-a-href-https-github-com-hrabal-hrabal-a'>Made and mantained by Federico Cerchiari / <a href="https://github.com/Hrabal">Hrabal</a></h2>
+<p>Get in touch using Slack: <a href="https://tempy-dev.slack.com/messages">tempy-dev.slack.com</a></p>
+<h2 id='contribute'>Contribute</h2>
+<p>Any contribution is welcome. Please refer to the <a href="https://github.com/Hrabal/TemPy/blob/master/CONTRIBUTING.md">contributing page</a> on the master GitHub repo.</p>
+<h1 id='project-info'>Project Info</h1><h2 id='compatibility'>Compatibility</h2>
 <p><strong>Python &gt;= 3 is a must</strong>, there is no intention to backport this project to Python 2.7.</p>
 
 <p><strong>Python &gt;= 3.3 is needed</strong>, for TemPy uses the delegation to subgenerator (the <code>yield from</code> statement) proposed in <a href="https://www.python.org/dev/peps/pep-0380/">PEP 380</a>.</p>
 
-<p>This form of yielding is used for speed and can be easily removed if you plan to use TemPy in Python 3.0 to 3.2.x , you&#39;ll just need to substitute the <code>yield from</code> with loop on the inner generator yielding single values.</p>
+<p>This form of yielding is used for speed and can be easily removed if you plan to use TemPy in Python 3.0 to 3.2.x , you&#39;ll just need to substitute the <code>yield from</code> with a loop on the inner generator yielding single values.</p>
 
-<p><strong>Python &gt;= 3.6 is preferred</strong>, some useful features depends on the preserved order of kwargs <a href="https://www.python.org/dev/peps/pep-0468/">PEP 468</a>.</p>
+<p><strong>Python &gt;= 3.6 is preferred</strong>, some useful features depends on the preserved order of kwargs proposed in <a href="https://www.python.org/dev/peps/pep-0468/">PEP 468</a>.</p>
 
 <p>The main feature is the possibility to have named child tags in the correct order. Naming child tags is possible in Python &lt; 3.6, but the tag&#39;s order will probably not be correct.</p>
-<h3 id='strong-it-it-very-reccomended-to-use-tempy-with-python-gt-3-6-strong'><strong>It it very reccomended to use TemPy with Python &gt;= 3.6.</strong></h3><h2 id='status'>Status</h2>
-<p>Current PyPi version: <a href="https://badge.fury.io/py/tem-py"><img src="https://badge.fury.io/py/tem-py.svg" alt="PyPI version" /></a></p>
 
-<p>CI Test coverage: <a href="https://coveralls.io/github/Hrabal/TemPy?branch=master"><img src="https://coveralls.io/repos/github/Hrabal/TemPy/badge.svg?branch=master" alt="Coverage Status" /></a></p>
+<aside class="success"><b>It it very reccomended to use TemPy with Python >= 3.6.</b></aside>
+<h2 id='status'>Status</h2>
+<p>Current <a href="https://pypi.org/project/tem-py/">PyPi</a> version</p>
 
-<p>CI Build status: <a href="https://travis-ci.org/Hrabal/TemPy">Travis</a> <a href="https://travis-ci.org/Hrabal/TemPy"><img src="https://travis-ci.org/Hrabal/TemPy.svg?branch=master" alt="Build Status" /></a></p>
-<h3 id='apache-2-0-license-see-license-for-details'>Apache 2.0 license, see LICENSE for details.</h3>
+<p><a href="https://badge.fury.io/py/tem-py"><img src="https://badge.fury.io/py/tem-py.svg" alt="PyPI version" /></a></p>
+
+<p><a href="https://coveralls.io/github/Hrabal/TemPy?branch=master">Coveralls</a> CI Test coverage</p>
+
+<p><a href="https://coveralls.io/github/Hrabal/TemPy?branch=master"><img src="https://coveralls.io/repos/github/Hrabal/TemPy/badge.svg?branch=master" alt="Coverage Status" /></a></p>
+
+<p><a href="https://travis-ci.org/Hrabal/TemPy">Travis</a> CI Build status</p>
+
+<p><a href="https://travis-ci.org/Hrabal/TemPy"><img src="https://travis-ci.org/Hrabal/TemPy.svg?branch=master" alt="Build Status" /></a></p>
+<h1 id='apache-2-0'>Apache 2.0</h1>
+<p>See <a href="https://github.com/Hrabal/TemPy/blob/master/LICENSE">LICENSE</a> for details.</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
