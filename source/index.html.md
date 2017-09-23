@@ -449,9 +449,9 @@ div2.css('background-color', 'blue')
 >>> <div id="another_dom_id" class="someHtmlClass comeOtherClass" style="width: 100px; float: left; height: 100em; background-color: blue"></div>
 ```
 
-HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) `Div(my_html_Attribute='my_html_attribute_value')` or later using the API.
+HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) `Div(my_html_attribute='my_html_attribute_value')` or later using the API.
 
-TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign `bool`, `True` or `False` to the attribute in TemPy: `Div(norma_attribute='foo', boolean_attribute=bool)` (a boolean attribute with `False` value will not be rendered).
+TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign `bool`, `True` or `False` to the attribute in TemPy: `Div(normal_attribute='foo', boolean_attribute=bool)` (a boolean attribute with `False` value will not be rendered).
 
 TemPy supports multiple, space separated, attributes like the HTML `class` attribute. In TemPy these are attributes that should contain iterables.
 
