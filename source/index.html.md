@@ -1,8 +1,8 @@
 ---
 title: TemPy - docs
 
-language_tabs: # must be one of https://git.io/vQNgJ
-  - python
+language_tabs:
+  - python: Python
 
 toc_footers:
   - <a href='#'>Get in touch using SLACK!</a>
@@ -10,40 +10,9 @@ toc_footers:
 search: true
 ---
 
-# TemPy Overview
-
-**Fast Object-Oriented HTML templating With Python!**
+# Overview
 
 ## What 
-Build HTML without writing a single tag.
-
-TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage "HTML" templates and objects in a pure Python.
-Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the `render()` method on the root element.
-
-TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.
-
-## Why?
-HTML is like SQL: we all use it, we know it works, we all recognize it's important, but our biggest dream is to never write a single line of it again. For SQL we have ORM's, but we're not there yet for HTML.
-
-Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..
-
-..so the idea of TemPy.
-
-## Speed
-
-One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
-
-No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.
-
-# Installation
-
-TemPy is avaiable on PyPi: `pip3 install tem-py`.
-
-Or clone/download this repository and run `python3 setup.py install`
-
-# Building the DOM
-
-## Basic Usage
 
 ```python
 from tempy.tags import Html, Head, Body, Meta, Link, Div, P, A
@@ -65,22 +34,14 @@ page = Html()(  # add tags inside the one you created calling the parent
 )
 ```
 
-```python
-# calling the tag 
-page[1][0](A(href='www.bar.com'))
+Build HTML without writing a single tag.
 
-# WARNING! Correct ordering with named Tag insertion is ensured with Python >= 3.5 (because kwargs are ordered)
-page(test=Div()) 
+TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage "HTML" templates and objects in a pure Python.
+Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the `render()` method on the root element.
 
-# using the API
-page[1][0].append(A(href='www.baz.com'))  
+TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.
 
-# access the body as if it's a page attribute
-link = Link().append_to(page.body) 
-
-# Add attributes and content to already placed tags
-link.attr(href='www.python.org')('This is a link to Python') 
-```
+## Why?
 
 ```
 page.render()
@@ -104,6 +65,84 @@ page.render()
 >>> </html>
 ```
 
+HTML is like SQL: we all use it, we know it works, we all recognize it's important, but our biggest dream is to never write a single line of it again. For SQL we have ORM's, but we're not there yet for HTML.
+
+Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..
+
+..so the idea of TemPy.
+
+## Speed
+
+One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
+
+No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.
+
+# Installation
+
+```shell
+pip3 install tem-py
+```
+
+```shell
+git clone https://github.com/Hrabal/TemPy.git
+cd TemPy
+python3 setup.py install
+```
+
+<aside class="notice">TemPy does not support Python 2.x. TemPy requires Python >= 3.3 to work.</aside>
+
+TemPy is avaiable on PyPi, so you can pip him.
+
+[PyPi.org page](https://pypi.org/project/tem-py/).
+
+If you want to customize TemPy you can clone the main [GitHub repo](https://github.com/Hrabal/TemPy).
+
+# Building the DOM
+
+## Basic Usage
+
+
+
+```python
+from tempy.tags import * 
+
+# Create some empty TemPy objects/tags
+div = Div()
+span = Span()
+
+# Create non empty TemPy objects/tags
+container = Div()(
+    'content: ', Div()('this is the content')
+)
+
+# Build the TemPy tree calling your objects
+div(span)
+span(A(href='www.bar.com')('this is the link text'))
+container(test=div) 
+
+# Or use the API
+container.append(A(href='www.baz.com')('another useful link'))
+
+# If you gave a name to a TemPy object call him by name
+link = Link().append_to(container.test)
+
+# Add attributes and content to already placed tags
+link.attr(href='www.python.org')('This is a link to Python')
+
+# Render your TemPy tree
+container.render()
+>>><div>content: 
+>>>    <div>this is the content</div>
+>>>    <div>
+>>>        <span>
+>>>            <a href="www.bar.com">this is the link text</a>
+>>>        </span>
+>>>        <link href="www.python.org"/>
+>>>    </div>
+>>>    <a href="www.baz.com">another useful link</a>
+>>></div>
+```
+
 TemPy offers clean syntax for building pages in pure python. Every TemPy object can be a container of other objects, and can be arrenged togheter to build a tree.
 
 Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: `div = Div()` will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.
@@ -115,8 +154,12 @@ It's possible to add multiple elements inside another and every TemPy object acc
 * single insertion: `Div()(Span())`
 * list insertion: `Div()(['something', Span(), 1])`
 * insetion from a generator: `Div()(Span() for _ in range(5))`
-* named insertion: `Div()(some_child=Span())` **Attention: named insertion is safe only when using Python >= 3.6**
+* named insertion: `Div()(some_child=Span())` ****
 * using the TemPy objects's API: `Div().append((Span())` *see below for a complete API listing*
+
+<aside class="warning">
+Attention: named insertion is safe only when using Python >= 3.6
+</aside>
 
 HTML tags have attributes, and so TemPy tags have too. It's possible to define tag attributes in different ways:
 
@@ -429,6 +472,12 @@ page.pop()
 
 
 Add elements or content by calling them like a function...
+
+> page(Head())
+
+<aside class="warning">
+Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because kwargs are ordered)
+</aside>
 
 ...or use one of the jQuery-like apis:
 
