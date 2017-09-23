@@ -262,9 +262,6 @@
             <a href="#api-reference" class="toc-h1 toc-link" data-title="API Reference">API Reference</a>
           </li>
           <li>
-            <a href="#performance" class="toc-h1 toc-link" data-title="Performance">Performance</a>
-          </li>
-          <li>
             <a href="#credits" class="toc-h1 toc-link" data-title="Credits">Credits</a>
               <ul class="toc-list-h2">
                   <li>
@@ -799,81 +796,6 @@ Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because
 <li>siblings() - </li>
 <li>slice() - </li>
 </ul>
-<h1 id='performance'>Performance</h1>
-<p>Performance varies considerably based on the complexity of the rendered content, the amount of dynamic content on the page, the size of the produced output and many other factors.</p>
-
-<p>TemPy does not parse strings, does not use regex and does not load .html files, resulting in great speed compared to the traditional frameworks such as Jinja2 and Mako.</p>
-
-<p>Here are a few benchmarks of TemPy in action, used in a Flask app, rendering a template (see code <a href="benchmarks">here</a>)</p>
-
-<p>Used HW: 2010 IMac, CPU:2,8 GHz Intel Core i7 RAM:16 GB 1067 MHz DDR3 Osx: 10.12.6.</p>
-
-<p>Benchmark made using <a href="https://github.com/wg/wrk">WRK</a></p>
-
-<p><img src="images/bench.jpg" alt="TemPy Web Rendering" /></p>
-
-<p>Running 20s test @ http://127.0.0.1:8888/tempy + http://127.0.0.1:8888/j2 - 10 threads and 200 connections</p>
-
-<table><thead>
-<tr>
-<th>Tempy</th>
-<th>Avg</th>
-<th>Stdev</th>
-<th>Max</th>
-<th>+/- Stdev</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Latency</td>
-<td>109.55ms</td>
-<td>52.04ms</td>
-<td>515.33ms</td>
-<td>93.09%</td>
-</tr>
-<tr>
-<td>Req/Sec</td>
-<td>118.27</td>
-<td>37.36</td>
-<td>240.00</td>
-<td>73.77%</td>
-</tr>
-</tbody></table>
-
-<p>16111 requests in 20.09s, 96.23MB read
-Requests/sec: 801.91
-Transfer/sec: 4.79MB</p>
-
-<table><thead>
-<tr>
-<th>Jinja2</th>
-<th>Avg</th>
-<th>Stdev</th>
-<th>Max</th>
-<th>+/- Stdev</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Latency</td>
-<td>216.04ms</td>
-<td>16.05ms</td>
-<td>267.06ms</td>
-<td>91.16%</td>
-</tr>
-<tr>
-<td>Req/Sec</td>
-<td>59.29</td>
-<td>20.53</td>
-<td>151.00</td>
-<td>71.23%</td>
-</tr>
-</tbody></table>
-
-<p>11841 requests in 20.08s, 72.80MB read
-Requests/sec:    589.70
-Transfer/sec:      3.63MB</p>
-
-<p>Performance difference is even higher in Jinja2 plain (no Flask) rendering:
-<img src="images/bench_plain.jpg" alt="TemPy No-Web Rednering" /></p>
 <h1 id='credits'>Credits</h1><h2 id='made-and-mantained-by-federico-cerchiari'>Made and mantained by Federico Cerchiari</h2>
 <p>Get in touch on GitHub: <a href="https://github.com/Hrabal">Hrabal</a></p>
 
