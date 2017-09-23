@@ -5,7 +5,7 @@ language_tabs:
   - python: Python
 
 toc_footers:
-  - <a href='#'>Get in touch using SLACK!</a>
+  - <h2><a href='https://tempy-dev.slack.com/messages'>Get in touch using SLACK!</a></h2>
 
 search: true
 ---
@@ -73,7 +73,7 @@ Templating systems are cool (Python syntax in html code) but not cool enough (yo
 
 ## Speed
 
-One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
+One of the main slow-speed factors when developing webapps are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
 
 No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.
 
@@ -605,12 +605,16 @@ Transfer/sec:      3.63MB
 Performance difference is even higher in Jinja2 plain (no Flask) rendering:
 ![TemPy No-Web Rednering](bench_plain.jpg)
 
-# Credits: made and mantained by Federico Cerchiari / Hrabal
+# Credits
 
-### Contribute.
-Any contribution is welcome. Please refer to the [contributing page](CONTRIBUTING.md).
+## Made and mantained by Federico Cerchiari / [Hrabal](https://github.com/Hrabal)
 
-# Project 
+Get in touch using Slack: [tempy-dev.slack.com](https://tempy-dev.slack.com/messages)
+
+## Contribute
+Any contribution is welcome. Please refer to the [contributing page](https://github.com/Hrabal/TemPy/blob/master/CONTRIBUTING.md) on the master GitHub repo.
+
+# Project Info
 
 ## Compatibility
 
@@ -618,22 +622,28 @@ Any contribution is welcome. Please refer to the [contributing page](CONTRIBUTIN
 
 **Python >= 3.3 is needed**, for TemPy uses the delegation to subgenerator (the `yield from` statement) proposed in [PEP 380](https://www.python.org/dev/peps/pep-0380/).
 
-This form of yielding is used for speed and can be easily removed if you plan to use TemPy in Python 3.0 to 3.2.x , you'll just need to substitute the `yield from` with loop on the inner generator yielding single values.
+This form of yielding is used for speed and can be easily removed if you plan to use TemPy in Python 3.0 to 3.2.x , you'll just need to substitute the `yield from` with a loop on the inner generator yielding single values.
 
 
-**Python >= 3.6 is preferred**, some useful features depends on the preserved order of kwargs [PEP 468](https://www.python.org/dev/peps/pep-0468/).
+**Python >= 3.6 is preferred**, some useful features depends on the preserved order of kwargs proposed in [PEP 468](https://www.python.org/dev/peps/pep-0468/).
 
 The main feature is the possibility to have named child tags in the correct order. Naming child tags is possible in Python < 3.6, but the tag's order will probably not be correct.
 
-
-### **It it very reccomended to use TemPy with Python >= 3.6.**
+<aside class="success"><b>It it very reccomended to use TemPy with Python >= 3.6.</b></aside>
 
 ## Status
 
-Current PyPi version: [![PyPI version](https://badge.fury.io/py/tem-py.svg)](https://badge.fury.io/py/tem-py)
+Current [PyPi](https://pypi.org/project/tem-py/) version
 
-CI Test coverage: [![Coverage Status](https://coveralls.io/repos/github/Hrabal/TemPy/badge.svg?branch=master)](https://coveralls.io/github/Hrabal/TemPy?branch=master)
+[![PyPI version](https://badge.fury.io/py/tem-py.svg)](https://badge.fury.io/py/tem-py)
 
-CI Build status: [Travis](https://travis-ci.org/Hrabal/TemPy) [![Build Status](https://travis-ci.org/Hrabal/TemPy.svg?branch=master)](https://travis-ci.org/Hrabal/TemPy)
+[Coveralls](https://coveralls.io/github/Hrabal/TemPy?branch=master) CI Test coverage
 
-### Apache 2.0 license, see LICENSE for details.
+[![Coverage Status](https://coveralls.io/repos/github/Hrabal/TemPy/badge.svg?branch=master)](https://coveralls.io/github/Hrabal/TemPy?branch=master)
+
+[Travis](https://travis-ci.org/Hrabal/TemPy) CI Build status
+
+[![Build Status](https://travis-ci.org/Hrabal/TemPy.svg?branch=master)](https://travis-ci.org/Hrabal/TemPy)
+
+# Apache 2.0
+See [LICENSE](https://github.com/Hrabal/TemPy/blob/master/LICENSE) for details.
