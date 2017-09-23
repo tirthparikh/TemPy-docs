@@ -97,11 +97,9 @@ TemPy is avaiable on PyPi, so you can pip him.
 
 If you want to customize TemPy you can clone the main [GitHub repo](https://github.com/Hrabal/TemPy).
 
-# Building the DOM
+# How to use TemPy
 
 ## Basic Usage
-
-
 
 ```python
 from tempy.tags import * 
