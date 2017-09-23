@@ -220,17 +220,6 @@
       <div id="toc" class="toc-list-h1">
           <li>
             <a href="#overview" class="toc-h1 toc-link" data-title="Overview">Overview</a>
-              <ul class="toc-list-h2">
-                  <li>
-                    <a href="#what" class="toc-h2 toc-link" data-title="Overview">What</a>
-                  </li>
-                  <li>
-                    <a href="#why" class="toc-h2 toc-link" data-title="Overview">Why?</a>
-                  </li>
-                  <li>
-                    <a href="#speed" class="toc-h2 toc-link" data-title="Overview">Speed</a>
-                  </li>
-              </ul>
           </li>
           <li>
             <a href="#installation" class="toc-h1 toc-link" data-title="Installation">Installation</a>
@@ -242,7 +231,7 @@
                     <a href="#basic-usage" class="toc-h2 toc-link" data-title="How to use TemPy">Basic Usage</a>
                   </li>
                   <li>
-                    <a href="#building-blocks" class="toc-h2 toc-link" data-title="How to use TemPy">Building blocks</a>
+                    <a href="#blocks-and-content" class="toc-h2 toc-link" data-title="How to use TemPy">Blocks and Content</a>
                   </li>
                   <li>
                     <a href="#oot-object-oriented-templating" class="toc-h2 toc-link" data-title="How to use TemPy">OOT - Object Oriented Templating</a>
@@ -253,24 +242,24 @@
               </ul>
           </li>
           <li>
-            <a href="#elements-api" class="toc-h1 toc-link" data-title="Elements api">Elements api</a>
+            <a href="#tempy-ojects" class="toc-h1 toc-link" data-title="TemPy ojects">TemPy ojects</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#tag-creation" class="toc-h2 toc-link" data-title="Elements api">Tag Creation</a>
+                    <a href="#tag-creation" class="toc-h2 toc-link" data-title="TemPy ojects">Tag Creation</a>
                   </li>
                   <li>
-                    <a href="#tag-attributes" class="toc-h2 toc-link" data-title="Elements api">Tag Attributes</a>
+                    <a href="#tag-attributes" class="toc-h2 toc-link" data-title="TemPy ojects">Tag Attributes</a>
                   </li>
                   <li>
-                    <a href="#tag-insertion-building-the-dom" class="toc-h2 toc-link" data-title="Elements api">Tag insertion: building the DOM</a>
+                    <a href="#building-the-dom" class="toc-h2 toc-link" data-title="TemPy ojects">Building the DOM</a>
                   </li>
                   <li>
-                    <a href="#complete-api-reference" class="toc-h2 toc-link" data-title="Elements api">Complete API Reference</a>
+                    <a href="#traversing-the-dom" class="toc-h2 toc-link" data-title="TemPy ojects">Traversing the DOM</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#dom-navigation" class="toc-h1 toc-link" data-title="DOM navigation">DOM navigation</a>
+            <a href="#api-reference" class="toc-h1 toc-link" data-title="API Reference">API Reference</a>
           </li>
           <li>
             <a href="#performance" class="toc-h1 toc-link" data-title="Performance">Performance</a>
@@ -308,7 +297,7 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='overview'>Overview</h1><h2 id='what'>What</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="n">Html</span><span class="p">,</span> <span class="n">Head</span><span class="p">,</span> <span class="n">Body</span><span class="p">,</span> <span class="n">Meta</span><span class="p">,</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Div</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span>
+        <h1 id='overview'>Overview</h1><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="n">Html</span><span class="p">,</span> <span class="n">Head</span><span class="p">,</span> <span class="n">Body</span><span class="p">,</span> <span class="n">Meta</span><span class="p">,</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Div</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span>
 <span class="n">my_text_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'This is foo'</span><span class="p">,</span> <span class="s">'This is Bar'</span><span class="p">,</span> <span class="s">'Have you met my friend Baz?'</span><span class="p">]</span>
 <span class="n">another_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Lorem ipsum '</span><span class="p">,</span> <span class="s">'dolor sit amet, '</span><span class="p">,</span> <span class="s">'consectetur adipiscing elit'</span><span class="p">]</span>
 
@@ -325,14 +314,7 @@
         <span class="n">another_list</span>  <span class="c"># add text from a list, str.join is used in rendering</span>
     <span class="p">)</span>
 <span class="p">)</span>
-</code></pre>
-<p>Build HTML without writing a single tag.</p>
-
-<p>TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage &quot;HTML&quot; templates and objects in a pure Python.
-Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the <code>render()</code> method on the root element.</p>
-
-<p>TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.</p>
-<h2 id='why'>Why?</h2><pre class="highlight html"><code>page.render()
+</code></pre><pre class="highlight html"><code>page.render()
 &gt;&gt;&gt; <span class="nt">&lt;html&gt;</span>
 &gt;&gt;&gt;     <span class="nt">&lt;head&gt;</span>
 &gt;&gt;&gt;         <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">/&gt;</span>
@@ -352,12 +334,22 @@ Navigating the DOM and manipulating tags is possible in a Python or jQuery-simil
 &gt;&gt;&gt;     <span class="nt">&lt;/body&gt;</span>
 &gt;&gt;&gt; <span class="nt">&lt;/html&gt;</span>
 </code></pre>
+<p>Build HTML without writing a single tag.</p>
+
 <p>HTML is like SQL: we all use it, we know it works, we all recognize it&#39;s important, but our biggest dream is to never write a single line of it again. For SQL we have ORM&#39;s, but we&#39;re not there yet for HTML.</p>
 
 <p>Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..</p>
 
 <p>..so the idea of TemPy.</p>
-<h2 id='speed'>Speed</h2>
+
+<p>TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage &quot;HTML&quot; templates and objects in a pure Python.</p>
+
+<p>Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the <code>render()</code> method on the root element.</p>
+
+<p>TemPy is designed to offer Object-Oriented Templating, giving the developer the ability to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.</p>
+
+<p><strong>Speed</strong></p>
+
 <p>One of the main slow-speed factors when developing webapps are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.</p>
 
 <p>No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.</p>
@@ -368,9 +360,7 @@ python3 setup.py install
 </code></pre>
 <aside class="notice">TemPy does not support Python 2.x. TemPy requires Python >= 3.3 to work.</aside>
 
-<p>TemPy is avaiable on PyPi, so you can pip him.</p>
-
-<p><a href="https://pypi.org/project/tem-py/">PyPi.org page</a>.</p>
+<p>TemPy is avaiable on PyPi, so you can pip him. <a href="https://pypi.org/project/tem-py/">PyPi.org</a> page.</p>
 
 <p>If you want to customize TemPy you can clone the main <a href="https://github.com/Hrabal/TemPy">GitHub repo</a>.</p>
 <h1 id='how-to-use-tempy'>How to use TemPy</h1><h2 id='basic-usage'>Basic Usage</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="o">*</span> 
@@ -411,9 +401,13 @@ python3 setup.py install
 <span class="o">&gt;&gt;&gt;</span>    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.baz.com"</span><span class="o">&gt;</span><span class="n">another</span> <span class="n">useful</span> <span class="n">link</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
 <span class="o">&gt;&gt;&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
 </code></pre>
-<p>TemPy offers clean syntax for building pages in pure python. Every TemPy object can be a container of other objects, and can be arrenged togheter to build a tree.</p>
+<p>TemPy offers clean syntax for building pages in pure python. Every TemPy object is a container of other objects, when rendered TemPy objects will produce an html tag containing the <code>str</code> representation of all his children.</p>
 
-<p>Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: <code>div = Div()</code> will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.</p>
+<p>TemPy objects can be arranged togheter dynamically to build the DOM tree. Every TemPy instance is a node of the DOM, and can be father or child of other TemPy onbjects.</p>
+
+<p>Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: <code>Div()</code> will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.</p>
+
+<p>TemPy tags can have attributes, that will be rendered inside the tag, it&#39;s possible to define attributes when instantiating the object (<code>Div(attribute=&#39;value&#39;)</code>) or later using the api (<code>Div().attr(attribute=&#39;value&#39;)</code>).</p>
 
 <p>Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it&#39;s a function: <code>div(Span())</code>. Element creation and insertion can be performed in a single instruction: <code>Div()(Span())</code>.</p>
 
@@ -423,13 +417,11 @@ python3 setup.py install
 <li>single insertion: <code>Div()(Span())</code></li>
 <li>list insertion: <code>Div()([&#39;something&#39;, Span(), 1])</code></li>
 <li>insetion from a generator: <code>Div()(Span() for _ in range(5))</code></li>
-<li>named insertion: <code>Div()(some_child=Span())</code> ****</li>
+<li>named insertion: <code>Div()(some_child=Span())</code></li>
 <li>using the TemPy objects&#39;s API: <code>Div().append((Span())</code> <em>see below for a complete API listing</em></li>
 </ul>
 
-<aside class="warning">
-Attention: named insertion is safe only when using Python >= 3.6
-</aside>
+<aside class="warning">Attention: named insertion is safe only when using Python >= 3.6</aside>
 
 <p>HTML tags have attributes, and so TemPy tags have too. It&#39;s possible to define tag attributes in different ways:</p>
 
@@ -442,7 +434,7 @@ Attention: named insertion is safe only when using Python >= 3.6
 
 <p>Calling <code>render</code> on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
 <code>render</code> will be called on every TemPy child, and <code>str()</code> will be called on every non-TemPy child.</p>
-<h2 id='building-blocks'>Building blocks</h2><pre class="highlight python tab-python"><code><span class="c"># --- file: base_elements.py</span>
+<h2 id='blocks-and-content'>Blocks and Content</h2><pre class="highlight python tab-python"><code><span class="c"># --- file: base_elements.py</span>
 <span class="kn">from</span> <span class="nn">somewhere</span> <span class="kn">import</span> <span class="n">links</span><span class="p">,</span> <span class="n">foot_imgs</span>
 <span class="c"># define some common blocks</span>
 <span class="n">header</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="s">'header'</span><span class="p">)(</span><span class="n">title</span><span class="o">=</span><span class="n">Div</span><span class="p">()(</span><span class="s">'My website'</span><span class="p">),</span> <span class="n">logo</span><span class="o">=</span><span class="n">Img</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s">'img.png'</span><span class="p">))</span>
@@ -453,8 +445,9 @@ Attention: named insertion is safe only when using Python >= 3.6
 
 <span class="c"># import the common blocks and use them inside your page</span>
 <span class="n">home_page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()(</span><span class="n">Head</span><span class="p">(),</span> <span class="n">body</span><span class="o">=</span><span class="n">Body</span><span class="p">()(</span><span class="n">header</span><span class="p">,</span> <span class="n">menu</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s">'Hello world.'</span><span class="p">,</span> <span class="n">footer</span><span class="o">=</span><span class="n">footer</span><span class="p">))</span>
-<span class="n">content_page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()(</span><span class="n">Head</span><span class="p">(),</span> <span class="n">body</span><span class="o">=</span><span class="n">Body</span><span class="p">()(</span><span class="n">header</span><span class="p">,</span> <span class="n">menu</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="n">Div</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="s">'container'</span><span class="p">),</span> <span class="n">footer</span><span class="o">=</span><span class="n">footer</span><span class="p">))</span>
+<span class="n">content_page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()(</span><span class="n">Head</span><span class="p">(),</span> <span class="n">body</span><span class="o">=</span><span class="n">Body</span><span class="p">()(</span><span class="n">header</span><span class="p">,</span> <span class="n">menu</span><span class="p">,</span> <span class="n">Content</span><span class="p">(</span><span class="s">'header'</span><span class="p">),</span> <span class="n">Content</span><span class="p">(</span><span class="s">'content'</span><span class="p">),</span> <span class="n">footer</span><span class="o">=</span><span class="n">footer</span><span class="p">))</span>
 </code></pre><pre class="highlight python tab-python"><code><span class="c"># --- file: my_controller.py</span>
+<span class="kn">from</span> <span class="nn">tempy</span> <span class="kn">import</span> <span class="n">Content</span>
 <span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="n">Div</span>
 <span class="kn">from</span> <span class="nn">pages</span> <span class="kn">import</span> <span class="n">home_page</span><span class="p">,</span> <span class="n">content_page</span>
 
@@ -464,10 +457,21 @@ Attention: named insertion is safe only when using Python >= 3.6
 
 <span class="nd">@controller_framework_decorator</span>
 <span class="k">def</span> <span class="nf">my_content_controller</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s">'/content'</span><span class="p">):</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span><span class="s">'This is my content!'</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">content_page</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span><span class="s">'This is my header!'</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s">"Hi, I'm a content"</span>
+    <span class="k">return</span> <span class="n">content_page</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
 </code></pre>
-<p>You can also create blocks and put them together using the manipulation api, each TemPy object can be used later inside other TemPy object:</p>
+<p>TemPy lets you build blocks and put them together using the manipulation api, each TemPy object can be used later inside another TemPy object.</p>
+
+<p>Static parts of pages can be created once an then used in different pages. Blocks can be created and imported as normal Python objects.</p>
+
+<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy class instance used in various pages, this will remain modified in every page and in every subsequent request.</aside>
+
+<p>To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy&#39;s <code>Content</code> class. Those elements are just containers with no html representation, at render time his childs will be rendered inside the <code>Content</code>&#39;s father.</p>
+
+<p><code>Content</code> can have a fixed content so it can be used as &#39;html invisible box&#39; (this fixed content can, however, be dynamic), or it can just have a name.</p>
+
+<p>Every TemPy objects can contain extra data that will not be rendered, you can manage this extra data with the <code>TemPyClass.data()</code> api as if it&#39;s a common dictionary. At render time TemPy will search into the extra data of the <code>Content</code> container, and recursively into his parents, looking for a key matching the <code>Content</code>&#39;s name. If it&#39;s found then it&#39;s value is used in rendering.</p>
 <h2 id='oot-object-oriented-templating'>OOT - Object Oriented Templating</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.widgets</span> <span class="kn">import</span> <span class="n">TempyPage</span>
 
 <span class="k">class</span> <span class="nc">BasePage</span><span class="p">(</span><span class="n">TempyPage</span><span class="p">):</span>
@@ -541,10 +545,26 @@ Attention: named insertion is safe only when using Python >= 3.6
 </span><span class="s">        return Div()(Span()(current_content.title),</span><span class="err">
 </span><span class="s">                     Span()(current_content.text)),</span><span class="err">
 </span><span class="s">                     Div()(comment for comment in current_content.comments))</span><span class="err">
-</span></code></pre>
-<p>TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and add custom html tree structures to use as blocks.
-..you can then sublass your custom TemPy object to add specific behavior:
-TemPy executes each base class <code>init</code> method in reverse mro, so your subclass can access all the elements defined in his parent classes.</p>
+</span></code></pre><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">CustomTag</span><span class="p">(</span><span class="n">tempy</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="n">__tag</span> <span class="o">=</span> <span class="s">'my_own_tag'</span>
+
+<span class="n">CustomTag</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">my_own_tag</span><span class="o">&gt;&lt;/</span><span class="n">my_own_tag</span><span class="o">&gt;</span>
+
+<span class="k">class</span> <span class="nc">CustomVoidTag</span><span class="p">(</span><span class="n">CustomTag</span><span class="p">,</span> <span class="n">VoidTag</span><span class="p">):</span> <span class="k">pass</span>
+<span class="n">CustomTag</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;/</span><span class="n">my_own_tag</span><span class="o">&gt;</span>
+</code></pre>
+<p>TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and define their inner tree structure, and also add custom methods.</p>
+
+<p>TemPy executes each base class <code>init</code> method in reverse mro, so your subclass can access all the elements defined in his parent classes.</p>
+
+<p>To create a custom TemPy tag, subclass the base <code>tempy.Tag</code> class and provide a custom <code>__tag</code> class variable</p>
+
+<pre>
+
+
+</pre>
 <h2 id='tempy-repr-39-s'>TemPy repr&#39;s</h2><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s">'foo'</span>
@@ -624,7 +644,7 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 </ol>
 
 <p>You can use this order to set different renderings for different situation/pages.</p>
-<h1 id='elements-api'>Elements api</h1><h2 id='tag-creation'>Tag Creation</h2><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
+<h1 id='tempy-ojects'>TemPy ojects</h1><h2 id='tag-creation'>Tag Creation</h2><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
 <span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 
 <span class="n">new_page</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
@@ -653,9 +673,9 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 <span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'background-color'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"another_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass comeOtherClass"</span> <span class="n">style</span><span class="o">=</span><span class="s">"width: 100px; float: left; height: 100em; background-color: blue"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
 </code></pre>
-<p>HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) <code>Div(my_html_Attribute=&#39;my_html_attribute_value&#39;)</code> or later using the API.</p>
+<p>HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) <code>Div(my_html_attribute=&#39;my_html_attribute_value&#39;)</code> or later using the API.</p>
 
-<p>TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign <code>bool</code>, <code>True</code> or <code>False</code> to the attribute in TemPy: <code>Div(norma_attribute=&#39;foo&#39;, boolean_attribute=bool)</code> (a boolean attribute with <code>False</code> value will not be rendered).</p>
+<p>TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign <code>bool</code>, <code>True</code> or <code>False</code> to the attribute in TemPy: <code>Div(normal_attribute=&#39;foo&#39;, boolean_attribute=bool)</code> (a boolean attribute with <code>False</code> value will not be rendered).</p>
 
 <p>TemPy supports multiple, space separated, attributes like the HTML <code>class</code> attribute. In TemPy these are attributes that should contain iterables.</p>
 
@@ -676,7 +696,7 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 <li>called with a dict as the only unnamed argument will <code>dict.update</code> the element&#39;s style with the given imput: <code>Div().css({&#39;color&#39;: &#39;white&#39;})</code></li>
 <li>called with kwargs will <code>dict.update</code> the element&#39;s style with the given kwargs: <code>Div().css(color=&#39;white&#39;)</code></li>
 </ul>
-<h2 id='tag-insertion-building-the-dom'>Tag insertion: building the DOM</h2><pre class="highlight python tab-python"><code><span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
+<h2 id='building-the-dom'>Building the DOM</h2><pre class="highlight python tab-python"><code><span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
 </code></pre><pre class="highlight python tab-python"><code><span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">()</span>
 <span class="n">page</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
@@ -705,7 +725,26 @@ Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because
 <p>...or use one of the jQuery-like apis:</p>
 
 <p>...same for removing:</p>
-<h2 id='complete-api-reference'>Complete API Reference</h2><pre class="highlight python tab-python"><code><span class="n">div1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+<h2 id='traversing-the-dom'>Traversing the DOM</h2><pre class="highlight python tab-python"><code><span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+<span class="n">container_div</span><span class="p">(</span><span class="n">content_div</span><span class="o">=</span><span class="n">Div</span><span class="p">())</span>
+
+<span class="n">container_div</span><span class="o">.</span><span class="n">content_div</span><span class="p">(</span><span class="s">'Some content'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;</span><span class="n">Some</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre><pre class="highlight python tab-python"><code><span class="n">container_div</span><span class="o">.</span><span class="n">children</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="nb">next</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="n">prev</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="n">prev_all</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="n">container_div</span><span class="o">.</span><span class="nb">slice</span><span class="p">()</span>
+</code></pre>
+<p>Every TemPy Tag content is iterable and accessible like a Python list:</p>
+
+<p>...or access elements inside a container as if it they were attributes:</p>
+
+<p>..or if you feel jQuery-ish you can use:</p>
+<h1 id='api-reference'>API Reference</h1><pre class="highlight python tab-python"><code><span class="n">div1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">div2</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">div1</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
 <span class="n">div1</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
@@ -760,25 +799,6 @@ Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because
 <li>siblings() - </li>
 <li>slice() - </li>
 </ul>
-<h1 id='dom-navigation'>DOM navigation</h1><pre class="highlight python tab-python"><code><span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
-<span class="n">container_div</span><span class="p">(</span><span class="n">content_div</span><span class="o">=</span><span class="n">Div</span><span class="p">())</span>
-
-<span class="n">container_div</span><span class="o">.</span><span class="n">content_div</span><span class="p">(</span><span class="s">'Some content'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;</span><span class="n">Some</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">container_div</span><span class="o">.</span><span class="n">children</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="nb">next</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">prev</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">prev_all</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="nb">slice</span><span class="p">()</span>
-</code></pre>
-<p>Every TemPy Tag content is iterable and accessible like a Python list:</p>
-
-<p>...or access elements inside a container as if it they were attributes:</p>
-
-<p>..or if you feel jQuery-ish you can use:</p>
 <h1 id='performance'>Performance</h1>
 <p>Performance varies considerably based on the complexity of the rendered content, the amount of dynamic content on the page, the size of the produced output and many other factors.</p>
 
