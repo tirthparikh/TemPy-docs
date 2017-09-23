@@ -12,8 +12,6 @@ search: true
 
 # Overview
 
-## What 
-
 ```python
 from tempy.tags import Html, Head, Body, Meta, Link, Div, P, A
 my_text_list = ['This is foo', 'This is Bar', 'Have you met my friend Baz?']
@@ -33,15 +31,6 @@ page = Html()(  # add tags inside the one you created calling the parent
     )
 )
 ```
-
-Build HTML without writing a single tag.
-
-TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage "HTML" templates and objects in a pure Python.
-Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the `render()` method on the root element.
-
-TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.
-
-## Why?
 
 ```
 page.render()
@@ -65,13 +54,21 @@ page.render()
 >>> </html>
 ```
 
+Build HTML without writing a single tag.
+
 HTML is like SQL: we all use it, we know it works, we all recognize it's important, but our biggest dream is to never write a single line of it again. For SQL we have ORM's, but we're not there yet for HTML.
 
 Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..
 
 ..so the idea of TemPy.
 
-## Speed
+TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage "HTML" templates and objects in a pure Python.
+
+Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the `render()` method on the root element.
+
+TemPy is designed to offer Object-Oriented Templating, giving the developer the ability to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.
+
+**Speed**
 
 One of the main slow-speed factors when developing webapps are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.
 
@@ -91,9 +88,7 @@ python3 setup.py install
 
 <aside class="notice">TemPy does not support Python 2.x. TemPy requires Python >= 3.3 to work.</aside>
 
-TemPy is avaiable on PyPi, so you can pip him.
-
-[PyPi.org page](https://pypi.org/project/tem-py/).
+TemPy is avaiable on PyPi, so you can pip him. [PyPi.org](https://pypi.org/project/tem-py/) page.
 
 If you want to customize TemPy you can clone the main [GitHub repo](https://github.com/Hrabal/TemPy).
 
@@ -141,9 +136,13 @@ container.render()
 >>></div>
 ```
 
-TemPy offers clean syntax for building pages in pure python. Every TemPy object can be a container of other objects, and can be arrenged togheter to build a tree.
+TemPy offers clean syntax for building pages in pure python. Every TemPy object is a container of other objects, when rendered TemPy objects will produce an html tag containing the `str` representation of all his children.
 
-Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: `div = Div()` will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.
+TemPy objects can be arranged togheter dynamically to build the DOM tree. Every TemPy instance is a node of the DOM, and can be father or child of other TemPy onbjects.
+
+Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: `Div()` will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.
+
+TemPy tags can have attributes, that will be rendered inside the tag, it's possible to define attributes when instantiating the object (`Div(attribute='value')`) or later using the api (`Div().attr(attribute='value')`).
 
 Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it's a function: `div(Span())`. Element creation and insertion can be performed in a single instruction: `Div()(Span())`.
 
@@ -152,12 +151,10 @@ It's possible to add multiple elements inside another and every TemPy object acc
 * single insertion: `Div()(Span())`
 * list insertion: `Div()(['something', Span(), 1])`
 * insetion from a generator: `Div()(Span() for _ in range(5))`
-* named insertion: `Div()(some_child=Span())` ****
+* named insertion: `Div()(some_child=Span())`
 * using the TemPy objects's API: `Div().append((Span())` *see below for a complete API listing*
 
-<aside class="warning">
-Attention: named insertion is safe only when using Python >= 3.6
-</aside>
+<aside class="warning">Attention: named insertion is safe only when using Python >= 3.6</aside>
 
 HTML tags have attributes, and so TemPy tags have too. It's possible to define tag attributes in different ways:
 
@@ -170,7 +167,7 @@ The resulting tree (in fact, the DOM), can be rendered by calling the `.render()
 Calling `render` on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
 `render` will be called on every TemPy child, and `str()` will be called on every non-TemPy child.
 
-## Building blocks
+## Blocks and Content
 
 ```python
 # --- file: base_elements.py
@@ -187,11 +184,12 @@ from base_elements import header, menu, footer
 
 # import the common blocks and use them inside your page
 home_page = Html()(Head(), body=Body()(header, menu, content='Hello world.', footer=footer))
-content_page = Html()(Head(), body=Body()(header, menu, container=Div(klass='container'), footer=footer))
+content_page = Html()(Head(), body=Body()(header, menu, Content('header'), Content('content'), footer=footer))
 ```
 
 ```python
 # --- file: my_controller.py
+from tempy import Content
 from tempy.tags import Div
 from pages import home_page, content_page
 
@@ -201,11 +199,22 @@ def my_home_controller(url='/'):
 
 @controller_framework_decorator
 def my_content_controller(url='/content'):
-    content = Div()('This is my content!')
-    return content_page.body.container.append(content).render()
+    header = Div()('This is my header!')
+    content = "Hi, I'm a content"
+    return content_page.render(header=header, content=content)
 ```
 
-You can also create blocks and put them together using the manipulation api, each TemPy object can be used later inside other TemPy object:
+TemPy lets you build blocks and put them together using the manipulation api, each TemPy object can be used later inside another TemPy object.
+
+Static parts of pages can be created once an then used in different pages. Blocks can be created and imported as normal Python objects.
+
+<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy class instance used in various pages, this will remain modified in every page and in every subsequent request.</aside>
+
+To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy's `Content` class. Those elements are just containers with no html representation, at render time his childs will be rendered inside the `Content`'s father.
+
+`Content` can have a fixed content so it can be used as 'html invisible box' (this fixed content can, however, be dynamic), or it can just have a name.
+
+Every TemPy objects can contain extra data that will not be rendered, you can manage this extra data with the `TemPyClass.data()` api as if it's a common dictionary. At render time TemPy will search into the extra data of the `Content` container, and recursively into his parents, looking for a key matching the `Content`'s name. If it's found then it's value is used in rendering.
 
 ## OOT - Object Oriented Templating
 
@@ -288,11 +297,30 @@ class HomePage(BasePage):
                      Div()(comment for comment in current_content.comments))
 ```
 
-TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and add custom html tree structures to use as blocks.
-..you can then sublass your custom TemPy object to add specific behavior:
+```python
+class CustomTag(tempy.Tag):
+    __tag = 'my_own_tag'
+
+CustomTag().render()
+>>> <my_own_tag></my_own_tag>
+
+class CustomVoidTag(CustomTag, VoidTag): pass
+CustomTag().render()
+>>> </my_own_tag>
+```
+
+TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and define their inner tree structure, and also add custom methods.
+
+
+
 TemPy executes each base class `init` method in reverse mro, so your subclass can access all the elements defined in his parent classes.
 
+To create a custom TemPy tag, subclass the base `tempy.Tag` class and provide a custom `__tag` class variable
 
+<pre>
+
+
+</pre>
 
 ## TemPy repr's
 
@@ -379,7 +407,7 @@ You can define several `TempyREPR` nested classes, when dealing with non-TemPy o
 
 You can use this order to set different renderings for different situation/pages.
 
-# Elements api
+# TemPy ojects
 
 ## Tag Creation 
 
@@ -442,7 +470,7 @@ The `css` method mimic the jQuery's brother behavior:
 * called with kwargs will `dict.update` the element's style with the given kwargs: `Div().css(color='white')`
 
 
-## Tag insertion: building the DOM
+## Building the DOM
 
 ```python
 page(Head())
@@ -481,7 +509,34 @@ Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because
 
 ...same for removing:
 
-## Complete API Reference
+## Traversing the DOM
+```python
+container_div = Div()
+container_div(content_div=Div())
+
+container_div.content_div('Some content')
+>>> <div><div>Some content</div></div>
+```
+
+```python
+container_div.children()
+container_div.first()
+container_div.last()
+container_div.next()
+container_div.prev()
+container_div.prev_all()
+container_div.parent()
+container_div.slice()
+```
+
+Every TemPy Tag content is iterable and accessible like a Python list:
+
+...or access elements inside a container as if it they were attributes:
+
+..or if you feel jQuery-ish you can use:
+
+
+# API Reference
 
 ```python
 div1 = Div()
@@ -538,33 +593,6 @@ Several api's are provided to modify you're existing DOM elements:
 * prev_all() - 
 * siblings() - 
 * slice() - 
-
-# DOM navigation
-```python
-container_div = Div()
-container_div(content_div=Div())
-
-container_div.content_div('Some content')
->>> <div><div>Some content</div></div>
-```
-
-```python
-container_div.children()
-container_div.first()
-container_div.last()
-container_div.next()
-container_div.prev()
-container_div.prev_all()
-container_div.parent()
-container_div.slice()
-```
-
-Every TemPy Tag content is iterable and accessible like a Python list:
-
-...or access elements inside a container as if it they were attributes:
-
-..or if you feel jQuery-ish you can use:
-
 
 # Performance
 Performance varies considerably based on the complexity of the rendered content, the amount of dynamic content on the page, the size of the produced output and many other factors.
