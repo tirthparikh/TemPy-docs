@@ -211,7 +211,7 @@
     <div class="toc-wrapper">
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="python">Python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -219,16 +219,16 @@
         <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
-            <a href="#fast-object-oriented-html-templating-with-python" class="toc-h1 toc-link" data-title="Fast Object-Oriented HTML templating With Python!">Fast Object-Oriented HTML templating With Python!</a>
+            <a href="#overview" class="toc-h1 toc-link" data-title="Overview">Overview</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#what" class="toc-h2 toc-link" data-title="Fast Object-Oriented HTML templating With Python!">What</a>
+                    <a href="#what" class="toc-h2 toc-link" data-title="Overview">What</a>
                   </li>
                   <li>
-                    <a href="#why" class="toc-h2 toc-link" data-title="Fast Object-Oriented HTML templating With Python!">Why?</a>
+                    <a href="#why" class="toc-h2 toc-link" data-title="Overview">Why?</a>
                   </li>
                   <li>
-                    <a href="#weeeeeeee" class="toc-h2 toc-link" data-title="Fast Object-Oriented HTML templating With Python!">Weeeeeeee!</a>
+                    <a href="#speed" class="toc-h2 toc-link" data-title="Overview">Speed</a>
                   </li>
               </ul>
           </li>
@@ -254,9 +254,20 @@
           </li>
           <li>
             <a href="#elements-api" class="toc-h1 toc-link" data-title="Elements api">Elements api</a>
-          </li>
-          <li>
-            <a href="#tag-attributes" class="toc-h1 toc-link" data-title="Tag Attributes">Tag Attributes</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#tag-creation" class="toc-h2 toc-link" data-title="Elements api">Tag Creation</a>
+                  </li>
+                  <li>
+                    <a href="#tag-attributes" class="toc-h2 toc-link" data-title="Elements api">Tag Attributes</a>
+                  </li>
+                  <li>
+                    <a href="#tag-insertion-building-the-dom" class="toc-h2 toc-link" data-title="Elements api">Tag insertion: building the DOM</a>
+                  </li>
+                  <li>
+                    <a href="#complete-api-reference" class="toc-h2 toc-link" data-title="Elements api">Complete API Reference</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#dom-navigation" class="toc-h1 toc-link" data-title="DOM navigation">DOM navigation</a>
@@ -291,21 +302,7 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='fast-object-oriented-html-templating-with-python'>Fast Object-Oriented HTML templating With Python!</h1><h3 id='what'>What</h3>
-<p>Build HTML without writing a single tag.
-TemPy dynamically generates HTML and accesses it in a pure Python or jQuery fashion. Navigating the DOM and manipulating tags is also possible in a Python or jQuery-similar sintax.</p>
-<h3 id='why'>Why?</h3>
-<p>HTML is like SQL: we all use it, we know it works, we all recognize it&#39;s important, but our biggest dream is to never write a single line of it again. For SQL we have ORM&#39;s, but we&#39;re not there yet for HTML.
-Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..
-..so the idea of TemPy.</p>
-<h3 id='weeeeeeee'>Weeeeeeee!</h3>
-<p>No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.
-See below for benchmarks against other templating engines.</p>
-<h1 id='installation'>Installation</h1>
-<p>TemPy is avaiable on PyPi: <code>pip3 install tem-py</code>.</p>
-
-<p>Or clone/download this repository and run <code>python3 setup.py install</code></p>
-<h1 id='building-the-dom'>Building the DOM</h1><h2 id='basic-usage'>Basic Usage</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="n">Html</span><span class="p">,</span> <span class="n">Head</span><span class="p">,</span> <span class="n">Body</span><span class="p">,</span> <span class="n">Meta</span><span class="p">,</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Div</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span>
+        <h1 id='overview'>Overview</h1><h2 id='what'>What</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="n">Html</span><span class="p">,</span> <span class="n">Head</span><span class="p">,</span> <span class="n">Body</span><span class="p">,</span> <span class="n">Meta</span><span class="p">,</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Div</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span>
 <span class="n">my_text_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'This is foo'</span><span class="p">,</span> <span class="s">'This is Bar'</span><span class="p">,</span> <span class="s">'Have you met my friend Baz?'</span><span class="p">]</span>
 <span class="n">another_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Lorem ipsum '</span><span class="p">,</span> <span class="s">'dolor sit amet, '</span><span class="p">,</span> <span class="s">'consectetur adipiscing elit'</span><span class="p">]</span>
 
@@ -322,21 +319,14 @@ See below for benchmarks against other templating engines.</p>
         <span class="n">another_list</span>  <span class="c"># add text from a list, str.join is used in rendering</span>
     <span class="p">)</span>
 <span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="c"># calling the tag </span>
-<span class="n">page</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">](</span><span class="n">A</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.bar.com'</span><span class="p">))</span>
+</code></pre>
+<p>Build HTML without writing a single tag.</p>
 
-<span class="c"># WARNING! Correct ordering with named Tag insertion is ensured with Python &gt;= 3.5 (because kwargs are ordered)</span>
-<span class="n">page</span><span class="p">(</span><span class="n">test</span><span class="o">=</span><span class="n">Div</span><span class="p">())</span> 
+<p>TemPy let the developer build the DOM using only Python objects and classes. It provides a simple but complete API to dynamically create, navigate, modify and manage &quot;HTML&quot; templates and objects in a pure Python.
+Navigating the DOM and manipulating tags is possible in a Python or jQuery-similar sintax. Then later your controllers can serve the page by just calling the <code>render()</code> method on the root element.</p>
 
-<span class="c"># using the API</span>
-<span class="n">page</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.baz.com'</span><span class="p">))</span>  
-
-<span class="c"># access the body as if it's a page attribute</span>
-<span class="n">link</span> <span class="o">=</span> <span class="n">Link</span><span class="p">()</span><span class="o">.</span><span class="n">append_to</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> 
-
-<span class="c"># Add attributes and content to already placed tags</span>
-<span class="n">link</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.python.org'</span><span class="p">)(</span><span class="s">'This is a link to Python'</span><span class="p">)</span> 
-</code></pre><pre class="highlight html"><code>page.render()
+<p>TemPy is designed to offer Object-Oriented Templating, giving the developer the possibility to use and manage html templates following the OOP paradigms. Sublassing, overriding and all the other OOP techiques will make HTML templating more flexible and mantainable.</p>
+<h2 id='why'>Why?</h2><pre class="highlight html"><code>page.render()
 &gt;&gt;&gt; <span class="nt">&lt;html&gt;</span>
 &gt;&gt;&gt;     <span class="nt">&lt;head&gt;</span>
 &gt;&gt;&gt;         <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">/&gt;</span>
@@ -356,11 +346,96 @@ See below for benchmarks against other templating engines.</p>
 &gt;&gt;&gt;     <span class="nt">&lt;/body&gt;</span>
 &gt;&gt;&gt; <span class="nt">&lt;/html&gt;</span>
 </code></pre>
-<p>TemPy offers clean syntax for building pages in pure python. Just make tags instantiating TemPy objects..</p>
+<p>HTML is like SQL: we all use it, we know it works, we all recognize it&#39;s important, but our biggest dream is to never write a single line of it again. For SQL we have ORM&#39;s, but we&#39;re not there yet for HTML.</p>
 
-<p>..add tags and content to your TemPy objects later..</p>
+<p>Templating systems are cool (Python syntax in html code) but not cool enough (you still have to write html somehow)..</p>
 
-<p>..and then render your TemPy html object</p>
+<p>..so the idea of TemPy.</p>
+<h2 id='speed'>Speed</h2>
+<p>One of the main slow-speed factors when developing for the web are the template engines. TemPy have a different approach to the HTML generation resulting in a big speed gain.</p>
+
+<p>No parsing and a simple structure makes TemPy fast. TemPy simply adds html tags around your data, and the actual html string exists only at render time.</p>
+<h1 id='installation'>Installation</h1><pre class="highlight shell tab-shell"><code>pip3 install tem-py
+</code></pre><pre class="highlight shell tab-shell"><code>git clone https://github.com/Hrabal/TemPy.git
+<span class="nb">cd </span>TemPy
+python3 setup.py install
+</code></pre>
+<aside class="notice">TemPy does not support Python 2.x. TemPy requires Python >= 3.3 to work.</aside>
+
+<p>TemPy is avaiable on PyPi, so you can pip him.</p>
+
+<p><a href="https://pypi.org/project/tem-py/">PyPi.org page</a>.</p>
+
+<p>If you want to customize TemPy you can clone the main <a href="https://github.com/Hrabal/TemPy">GitHub repo</a>.</p>
+<h1 id='building-the-dom'>Building the DOM</h1><h2 id='basic-usage'>Basic Usage</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.tags</span> <span class="kn">import</span> <span class="o">*</span> 
+
+<span class="c"># Create some empty TemPy objects/tags</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+<span class="n">span</span> <span class="o">=</span> <span class="n">Span</span><span class="p">()</span>
+
+<span class="c"># Create non empty TemPy objects/tags</span>
+<span class="n">container</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span>
+    <span class="s">'content: '</span><span class="p">,</span> <span class="n">Div</span><span class="p">()(</span><span class="s">'this is the content'</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c"># Build the TemPy tree calling your objects</span>
+<span class="n">div</span><span class="p">(</span><span class="n">span</span><span class="p">)</span>
+<span class="n">span</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.bar.com'</span><span class="p">)(</span><span class="s">'this is the link text'</span><span class="p">))</span>
+<span class="n">container</span><span class="p">(</span><span class="n">test</span><span class="o">=</span><span class="n">div</span><span class="p">)</span> 
+
+<span class="c"># Or use the API</span>
+<span class="n">container</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.baz.com'</span><span class="p">)(</span><span class="s">'another useful link'</span><span class="p">))</span>
+
+<span class="c"># If you gave a name to a TemPy object call him by name</span>
+<span class="n">link</span> <span class="o">=</span> <span class="n">Link</span><span class="p">()</span><span class="o">.</span><span class="n">append_to</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
+
+<span class="c"># Add attributes and content to already placed tags</span>
+<span class="n">link</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s">'www.python.org'</span><span class="p">)(</span><span class="s">'This is a link to Python'</span><span class="p">)</span>
+
+<span class="c"># Render your TemPy tree</span>
+<span class="n">container</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;&lt;</span><span class="n">div</span><span class="o">&gt;</span><span class="n">content</span><span class="p">:</span> 
+<span class="o">&gt;&gt;&gt;</span>    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span><span class="n">this</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>        <span class="o">&lt;</span><span class="n">span</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>            <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.bar.com"</span><span class="o">&gt;</span><span class="n">this</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">link</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>        <span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>        <span class="o">&lt;</span><span class="n">link</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.python.org"</span><span class="o">/&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>    <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.baz.com"</span><span class="o">&gt;</span><span class="n">another</span> <span class="n">useful</span> <span class="n">link</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre>
+<p>TemPy offers clean syntax for building pages in pure python. Every TemPy object can be a container of other objects, and can be arrenged togheter to build a tree.</p>
+
+<p>Every HTML tag have his corresponding TemPy class, to create a tag just instantiate the TemPy class: <code>div = Div()</code> will produce an object that can contain other objects (TemPy objects or not) and can be rendered into and HTML string.</p>
+
+<p>Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it&#39;s a function: <code>div(Span())</code>. Element creation and insertion can be performed in a single instruction: <code>Div()(Span())</code>.</p>
+
+<p>It&#39;s possible to add multiple elements inside another and every TemPy object accepts different kind of element insertion:</p>
+
+<ul>
+<li>single insertion: <code>Div()(Span())</code></li>
+<li>list insertion: <code>Div()([&#39;something&#39;, Span(), 1])</code></li>
+<li>insetion from a generator: <code>Div()(Span() for _ in range(5))</code></li>
+<li>named insertion: <code>Div()(some_child=Span())</code> ****</li>
+<li>using the TemPy objects&#39;s API: <code>Div().append((Span())</code> <em>see below for a complete API listing</em></li>
+</ul>
+
+<aside class="warning">
+Attention: named insertion is safe only when using Python >= 3.6
+</aside>
+
+<p>HTML tags have attributes, and so TemPy tags have too. It&#39;s possible to define tag attributes in different ways:</p>
+
+<ul>
+<li>during the element instantiation: <code>Div(some_attribute=&#39;some_value&#39;)</code></li>
+<li>usind the <code>attr</code> API: <code>Div().attr(some_attribute=&#39;some_value&#39;)</code></li>
+</ul>
+
+<p>The resulting tree (in fact, the DOM), can be rendered by calling the <code>.render()</code> method.</p>
+
+<p>Calling <code>render</code> on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
+<code>render</code> will be called on every TemPy child, and <code>str()</code> will be called on every non-TemPy child.</p>
 <h2 id='building-blocks'>Building blocks</h2><pre class="highlight python tab-python"><code><span class="c"># --- file: base_elements.py</span>
 <span class="kn">from</span> <span class="nn">somewhere</span> <span class="kn">import</span> <span class="n">links</span><span class="p">,</span> <span class="n">foot_imgs</span>
 <span class="c"># define some common blocks</span>
@@ -504,25 +579,98 @@ TemPy executes each base class <code>init</code> method in reverse mro, so your 
     <span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c"># note: here self is the object's parent, not the root</span>
             <span class="bp">self</span><span class="p">(</span><span class="s">'Hello World, this is bar: '</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
-</code></pre>
-<p>Another way to use TemPy is to define a nested <code>TempyREPR</code> class inside your classes:</p>
 
-<p>You can think the <code>TempyREPR</code> as a <code>__repr__</code> equivalent, so when an instance is placed inside a TemPy tree, the <code>TempyREPR</code> subclass is used to render the instance.</p>
+
+<span class="n">my_instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="n">Div</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using Div(TempyREPR) nested class</span>
+
+<span class="n">A</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using A(TempyREPR) nested class</span>
+
+<span class="n">Table</span><span class="p">()(</span><span class="n">Tr</span><span class="p">()(</span><span class="n">Td</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)))</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using Td(TempyREPR) nested class</span>
+
+<span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">Html</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="n">HomePage</span><span class="p">()(</span>
+    <span class="n">Head</span><span class="p">()(),</span>
+    <span class="n">Body</span><span class="p">()(</span>
+        <span class="n">Div</span><span class="p">()(</span>
+            <span class="n">H1</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using HomePage(TempyREPR) nested class</span>
+</code></pre>
+<p>Another way to use TemPy is to define a nested <code>TempyREPR</code> subclass inside your own classes.</p>
+
+<p>You can think the <code>TempyREPR</code> nested class as a <code>__repr__</code> magic method equivalent: TemPy uses the <code>TempyREPR</code> nested class to represent objects just like Python uses the <code>__repr__</code> method.</p>
+
+<p>When an object is placed inside a tree TemPy searches for a <code>TempyREPR</code> class inside this object, if it&#39;s found, the <code>repr</code> method of this class is used as a template.
+The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only argument, with a little magic this <code>self</code> is both your object and the tree element, so all the common TemPy API is usable and your object attributes are accessible using <code>self</code>.</p>
 
 <p>You can define several <code>TempyREPR</code> nested classes, when dealing with non-TemPy object TemPy will search for a <code>TempyREPR</code> subclass following this priority:</p>
 
-<ul>
+<ol>
 <li>a <code>TempyREPR</code> subclass with the same name of his TemPy container</li>
 <li>a <code>TempyREPR</code> subclass with the same name of his TemPy container&#39;s root</li>
 <li>a <code>TempyREPR</code> subclass named <code>HtmlREPR</code></li>
 <li>the first <code>TempyREPR</code> found.</li>
 <li>if none of the previous if found, the object will be rendered calling his <code>__str__</code> method</li>
+</ol>
+
+<p>You can use this order to set different renderings for different situation/pages.</p>
+<h1 id='elements-api'>Elements api</h1><h2 id='tag-creation'>Tag Creation</h2><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+
+<span class="n">new_page</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+<span class="n">new_page_2</span> <span class="o">=</span> <span class="n">page</span> <span class="o">+</span> <span class="n">div</span>
+<span class="n">new_page_3</span> <span class="o">=</span> <span class="n">new_page_2</span> <span class="o">-</span> <span class="n">div</span>
+<span class="n">list_of_5_divs</span> <span class="o">=</span> <span class="n">div</span> <span class="o">*</span> <span class="mi">5</span>
+</code></pre>
+<p>Create DOM elements by instantiating tag classes. Those elemets are nodes in the DOM tree and can be attached, detached, moved and composed togheter dynamically.</p>
+
+<p>There are other 2 ways to create TemPy objects:</p>
+
+<ul>
+<li>using the <code>clone()</code> API</li>
+<li>adding subtracting or multiplying TemPy objects</li>
+</ul>
+<h2 id='tag-attributes'>Tag Attributes</h2><pre class="highlight python tab-python"><code><span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'my_html_id'</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="s">'someHtmlClass'</span><span class="p">)</span> <span class="c"># 'klass' because 'class' is a Python's buildin keyword</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"my_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="s">'someHtmlClass'</span><span class="p">)(</span><span class="s">'text of this link'</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'another_dom_id'</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">attr</span><span class="p">({</span><span class="s">'href'</span><span class="p">:</span> <span class="s">'www.thisisalink.com'</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="nb">id</span><span class="o">=</span><span class="s">"another_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass"</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.thisisalink.com"</span><span class="o">&gt;</span><span class="n">text</span> <span class="n">of</span> <span class="n">this</span> <span class="n">link</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</code></pre><pre class="highlight python tab-python"><code><span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s">'100px'</span><span class="p">,</span> <span class="nb">float</span><span class="o">=</span><span class="s">'left'</span><span class="p">)</span>
+<span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">({</span><span class="s">'height'</span><span class="p">:</span> <span class="s">'100em'</span><span class="p">})</span>
+<span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'background-color'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"another_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass comeOtherClass"</span> <span class="n">style</span><span class="o">=</span><span class="s">"width: 100px; float: left; height: 100em; background-color: blue"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre>
+<p>HTML tag attributes can be managed in two ways: you can add attributes to every element at definition time (TemPy object instantiation) <code>Div(my_html_Attribute=&#39;my_html_attribute_value&#39;)</code> or later using the API.</p>
+
+<p>TemPy supports normal and boolean (attributes with no explicit value) HTML attributes. To define a boolean attribute just assign <code>bool</code>, <code>True</code> or <code>False</code> to the attribute in TemPy: <code>Div(norma_attribute=&#39;foo&#39;, boolean_attribute=bool)</code> (a boolean attribute with <code>False</code> value will not be rendered).</p>
+
+<p>TemPy supports multiple, space separated, attributes like the HTML <code>class</code> attribute. In TemPy these are attributes that should contain iterables.</p>
+
+<p>Few axceptions are needed, for some common HTML attributes names (i.e: &#39;class&#39;, &#39;type&#39;, etc..) are Python native keyword and can not be used as argument names, those are mapped to custom TemPy names:</p>
+
+<ul>
+<li><code>klass</code> -&gt; &#39;class&#39;</li>
+<li><code>typ</code> -&gt; &#39;type&#39;</li>
+<li><code>_for</code> -&gt; &#39;for&#39;</li>
 </ul>
 
-<p>You can use this order to set different renderings for different situation/pages:</p>
-<h1 id='elements-api'>Elements api</h1><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
+<p>Another kind of managed attributes are the mapping kind, like the <code>style</code> tag attribute. Style can be managed using passing a dictionary to the <code>style</code> attribute directly (<code>Div(style={&#39;background-color&#39;: &#39;blue&#39;})</code>), or can be edited in the jQuery fashion with the <code>.css()</code> method.</p>
+
+<p>The <code>css</code> method mimic the jQuery&#39;s brother behavior:</p>
+
+<ul>
+<li>called with no arguments returns the style dictionary: <code>Div(style={&#39;color&#39;: &#39;white&#39;}).css() -returns-&gt; {&#39;color&#39;: &#39;white&#39;}</code></li>
+<li>called with a dict as the only unnamed argument will <code>dict.update</code> the element&#39;s style with the given imput: <code>Div().css({&#39;color&#39;: &#39;white&#39;})</code></li>
+<li>called with kwargs will <code>dict.update</code> the element&#39;s style with the given kwargs: <code>Div().css(color=&#39;white&#39;)</code></li>
+</ul>
+<h2 id='tag-insertion-building-the-dom'>Tag insertion: building the DOM</h2><pre class="highlight python tab-python"><code><span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
 </code></pre><pre class="highlight python tab-python"><code><span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">()</span>
 <span class="n">page</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
@@ -537,7 +685,21 @@ TemPy executes each base class <code>init</code> method in reverse mro, so your 
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
 <span class="n">page</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">div1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+</code></pre>
+<p>Add elements or content by calling them like a function...</p>
+
+<blockquote>
+<p>page(Head())</p>
+</blockquote>
+
+<aside class="warning">
+Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because kwargs are ordered)
+</aside>
+
+<p>...or use one of the jQuery-like apis:</p>
+
+<p>...same for removing:</p>
+<h2 id='complete-api-reference'>Complete API Reference</h2><pre class="highlight python tab-python"><code><span class="n">div1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">div2</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">div1</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
 <span class="n">div1</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
@@ -564,14 +726,6 @@ TemPy executes each base class <code>init</code> method in reverse mro, so your 
 <span class="n">div1</span><span class="o">.</span><span class="n">siblings</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
 <span class="n">div1</span><span class="o">.</span><span class="nb">slice</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
 </code></pre>
-<p>Create DOM elements by instantiating tags:</p>
-
-<p>Add elements or content by calling them like a function...</p>
-
-<p>...or use one of the jQuery-like apis:</p>
-
-<p>...same for removing:</p>
-
 <p>Several api&#39;s are provided to modify you&#39;re existing DOM elements:</p>
 
 <ul>
@@ -600,52 +754,6 @@ TemPy executes each base class <code>init</code> method in reverse mro, so your 
 <li>siblings() - </li>
 <li>slice() - </li>
 </ul>
-<h1 id='tag-attributes'>Tag Attributes</h1><pre class="highlight python tab-python"><code><span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'my_html_id'</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="s">'someHtmlClass'</span><span class="p">)</span> <span class="c"># 'klass' because 'class' is a Python's buildin keyword</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"my_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="s">'someHtmlClass'</span><span class="p">)(</span><span class="s">'text of this link'</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'another_dom_id'</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">attr</span><span class="p">({</span><span class="s">'href'</span><span class="p">:</span> <span class="s">'www.thisisalink.com'</span><span class="p">})</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="nb">id</span><span class="o">=</span><span class="s">"another_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass"</span> <span class="n">href</span><span class="o">=</span><span class="s">"www.thisisalink.com"</span><span class="o">&gt;</span><span class="n">text</span> <span class="n">of</span> <span class="n">this</span> <span class="n">link</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s">'100px'</span><span class="p">,</span> <span class="nb">float</span><span class="o">=</span><span class="s">'left'</span><span class="p">)</span>
-<span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">({</span><span class="s">'height'</span><span class="p">:</span> <span class="s">'100em'</span><span class="p">})</span>
-<span class="n">div2</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'background-color'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"another_dom_id"</span> <span class="n">class</span><span class="o">=</span><span class="s">"someHtmlClass comeOtherClass"</span> <span class="n">style</span><span class="o">=</span><span class="s">"width: 100px; float: left; height: 100em; background-color: blue"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">divs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">div</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="s">'inner'</span><span class="p">)</span> <span class="k">for</span> <span class="n">div</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
-<span class="n">ps</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span><span class="n">divs</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">div</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">container_div</span><span class="p">):</span>
-    <span class="n">div</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'divId'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="n">container_div</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
-<span class="n">container_div</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'pId'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId0"</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span> <span class="nb">id</span><span class="o">=</span><span class="s">"pId"</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>         <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId1"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId2"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId3"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId4"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId5"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId6"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId7"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId8"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s">"divId9"</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-</code></pre>
-<p>Add attributes to every element at definition time or later.</p>
-
-<p>Styles are editable in the jQuery fashion:</p>
 <h1 id='dom-navigation'>DOM navigation</h1><pre class="highlight python tab-python"><code><span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">container_div</span><span class="p">(</span><span class="n">content_div</span><span class="o">=</span><span class="n">Div</span><span class="p">())</span>
 
@@ -762,7 +870,7 @@ Transfer/sec:      3.63MB</p>
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="python">Python</a>
           </div>
       </div>
     </div>
