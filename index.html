@@ -408,17 +408,17 @@ python3 setup.py install
 
 <p>Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it&#39;s a function: <code>div(Span())</code>. Element creation and insertion can be performed in a single instruction: <code>Div()(Span())</code>.</p>
 
-<p>It&#39;s possible to add multiple elements inside another and every TemPy object accepts different kind of element insertion:</p>
+<p>It&#39;s possible to add elements inside TemPy objects:</p>
 
 <ul>
-<li>single insertion: <code>Div()(Span())</code></li>
-<li>list insertion: <code>Div()([&#39;something&#39;, Span(), 1])</code></li>
-<li>insetion from a generator: <code>Div()(Span() for _ in range(5))</code></li>
-<li>named insertion: <code>Div()(some_child=Span())</code></li>
-<li>using the TemPy objects&#39;s API: <code>Div().append((Span())</code> <em>see below for a complete API listing</em></li>
+<li>single objects: <code>Div()(Span())</code></li>
+<li>lists: <code>Div()([&#39;something&#39;, Span(), 1])</code></li>
+<li>generators: <code>Div()(Span() for _ in range(5))</code></li>
+<li>single objects with a name (so they can be accessed by name later): <code>Div()(some_child=Span())</code></li>
+<li>or using the TemPy objects&#39;s API: <code>Div().append((Span())</code> <em>see below for a complete API listing</em></li>
 </ul>
 
-<aside class="warning">Attention: named insertion is safe only when using Python >= 3.6</aside>
+<aside class="warning">Attention: named insertion is safe only using Python >= 3.6</aside>
 
 <p>HTML tags have attributes, and so TemPy tags have too. It&#39;s possible to define tag attributes in different ways:</p>
 
@@ -427,10 +427,10 @@ python3 setup.py install
 <li>usind the <code>attr</code> API: <code>Div().attr(some_attribute=&#39;some_value&#39;)</code></li>
 </ul>
 
-<p>The resulting tree (in fact, the DOM), can be rendered by calling the <code>.render()</code> method.</p>
+<p>The resulting tree is the DOM, and can be rendered by calling the <code>.render()</code> method.</p>
 
 <p>Calling <code>render</code> on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
-<code>render</code> will be called on every TemPy child, and <code>str()</code> will be called on every non-TemPy child.</p>
+<code>TemPyChild.render()</code> will be called on every TemPy child, and <code>str(child)</code> will be called on every non-TemPy child.</p>
 <h2 id='blocks-and-content'>Blocks and Content</h2><pre class="highlight python tab-python"><code><span class="c"># --- file: base_elements.py</span>
 <span class="kn">from</span> <span class="nn">somewhere</span> <span class="kn">import</span> <span class="n">links</span><span class="p">,</span> <span class="n">foot_imgs</span>
 <span class="c"># define some common blocks</span>
@@ -462,13 +462,38 @@ python3 setup.py install
 
 <p>Static parts of pages can be created once an then used in different pages. Blocks can be created and imported as normal Python objects.</p>
 
-<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy class instance used in various pages, this will remain modified in every page and in every subsequent request.</aside>
+<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy instance used in various pages, this will be modified in every page and in every subsequent request.</aside>
 
-<p>To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy&#39;s <code>Content</code> class. Those elements are just containers with no html representation, at render time his childs will be rendered inside the <code>Content</code>&#39;s father.</p>
+<p>To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy&#39;s <code>Content</code> class.</p>
 
-<p><code>Content</code> can have a fixed content so it can be used as &#39;html invisible box&#39; (this fixed content can, however, be dynamic), or it can just have a name.</p>
+<p>Those elements are just containers with no html representation, at render time his childs will be rendered inside the <code>Content</code>&#39;s father. <code>Content</code> can have a fixed content so it can be used as &#39;html invisible box&#39; (this fixed content can, however, be dynamic), or it can just have a name.</p>
 
 <p>Every TemPy objects can contain extra data that will not be rendered, you can manage this extra data with the <code>TemPyClass.data()</code> api as if it&#39;s a common dictionary. At render time TemPy will search into the extra data of the <code>Content</code> container, and recursively into his parents, looking for a key matching the <code>Content</code>&#39;s name. If it&#39;s found then it&#39;s value is used in rendering.</p>
+
+<p><code id='lefty-code'>container = Div()(
+    Content(content=&#39;This is a fixed content&#39;)
+)
+container.render()
+&gt;&gt;&gt; &lt;div&gt;This is a fixed content&lt;/div&gt;
+</code></p>
+
+<p><code id='lefty-code'>container = Div()(
+    Content(&#39;a_content_name&#39;)
+)
+container.data({&#39;a_content_name&#39;: &#39;This is dynamic content&#39;})
+container.render()
+&gt;&gt;&gt; &lt;div&gt;This is dynamic content&lt;/div&gt;
+</code></p>
+
+<p><code id='lefty-code'>root_container = Span()
+container = Div()(
+    Content(&#39;a_content_name&#39;)
+)
+root_container.append(container)
+root_container.inject({&#39;a_content_name&#39;: &#39;This is dynamic content&#39;})
+root_container.render()
+&gt;&gt;&gt; &lt;span&gt;&lt;div&gt;This is dynamic content&lt;/div&gt;&lt;/span&gt;
+</code></p>
 <h2 id='oot-object-oriented-templating'>OOT - Object Oriented Templating</h2><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">tempy.widgets</span> <span class="kn">import</span> <span class="n">TempyPage</span>
 
 <span class="k">class</span> <span class="nc">BasePage</span><span class="p">(</span><span class="n">TempyPage</span><span class="p">):</span>
@@ -519,7 +544,7 @@ python3 setup.py install
                 <span class="k">for</span> <span class="n">mi</span> <span class="ow">in</span> <span class="n">Menu</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">menu</span><span class="o">=</span><span class="n">typ</span>
                                                <span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Menu</span><span class="o">.</span><span class="n">order</span><span class="p">)</span><span class="o">.</span><span class="nb">all</span><span class="p">()]</span>
 
-</code></pre><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">BasePage</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">BasePage</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">content</span><span class="p">(</span>
@@ -529,78 +554,78 @@ python3 setup.py install
                 <span class="n">H3</span><span class="p">()(</span><span class="s">'Hame page important content'</span><span class="p">),</span>
                 <span class="s">'Look, I</span><span class="se">\'</span><span class="s">m a string!'</span><span class="p">,</span> <span class="n">Br</span><span class="p">(),</span>
                 <span class="n">H3</span><span class="p">()(</span><span class="s">'H3 is big, really big'</span><span class="p">),</span>
-                <span class="n">H1</span><span class="p">()(</span><span class="s">'Today'</span><span class="n">s</span> <span class="n">content</span><span class="p">:</span><span class="s">'),</span><span class="err">
-</span><span class="s">                self.get_dynamic_content()</span><span class="err">
-</span><span class="s">            )</span><span class="err">
-</span><span class="s">        )</span><span class="err">
+                <span class="n">H1</span><span class="p">()(</span><span class="s">'Today</span><span class="se">\'</span><span class="s">s content:'</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_dynamic_content</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
-</span><span class="s">    def get_dynamic_content(self):</span><span class="err">
-</span><span class="s">        # Here using SQLAlchemy:</span><span class="err">
-</span><span class="s">        current_content = Content.query.outerjoin(Content.comments).order_by(Content.date.desc(), Content.id.desc()).limit(1).first()</span><span class="err">
-</span><span class="s">        if not current_content:</span><span class="err">
-</span><span class="s">            return '</span><span class="n">No</span> <span class="n">content</span> <span class="n">today</span><span class="err">!</span><span class="s">'</span><span class="err">
-</span><span class="s">        return Div()(Span()(current_content.title),</span><span class="err">
-</span><span class="s">                     Span()(current_content.text)),</span><span class="err">
-</span><span class="s">                     Div()(comment for comment in current_content.comments))</span><span class="err">
-</span></code></pre><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">CustomTag</span><span class="p">(</span><span class="n">tempy</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
-    <span class="n">__tag</span> <span class="o">=</span> <span class="s">'my_own_tag'</span>
-
-<span class="n">CustomTag</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">my_own_tag</span><span class="o">&gt;&lt;/</span><span class="n">my_own_tag</span><span class="o">&gt;</span>
-
-<span class="k">class</span> <span class="nc">CustomVoidTag</span><span class="p">(</span><span class="n">CustomTag</span><span class="p">,</span> <span class="n">VoidTag</span><span class="p">):</span> <span class="k">pass</span>
-<span class="n">CustomTag</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;/</span><span class="n">my_own_tag</span><span class="o">&gt;</span>
+    <span class="k">def</span> <span class="nf">get_dynamic_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Here using SQLAlchemy:</span>
+        <span class="n">current_content</span> <span class="o">=</span> <span class="n">Content</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">outerjoin</span><span class="p">(</span><span class="n">Content</span><span class="o">.</span><span class="n">comments</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Content</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">desc</span><span class="p">(),</span> <span class="n">Content</span><span class="o">.</span><span class="nb">id</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">current_content</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">'No content today!'</span>
+        <span class="k">return</span> <span class="n">Div</span><span class="p">()(</span><span class="n">Span</span><span class="p">()(</span><span class="n">current_content</span><span class="o">.</span><span class="n">title</span><span class="p">),</span>
+                     <span class="n">Span</span><span class="p">()(</span><span class="n">current_content</span><span class="o">.</span><span class="n">text</span><span class="p">)),</span>
+                     <span class="n">Div</span><span class="p">()(</span><span class="n">comment</span> <span class="k">for</span> <span class="n">comment</span> <span class="ow">in</span> <span class="n">current_content</span><span class="o">.</span><span class="n">comments</span><span class="p">))</span>
 </code></pre>
 <p>TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and define their inner tree structure, and also add custom methods.</p>
 
-<p>TemPy executes each base class <code>init</code> method in reverse mro, so your subclass can access all the elements defined in his parent classes.</p>
+<p>For example we can define a basic <code>tempy.tags.Html</code> subclass where we define the basic shared page structure (i.e: header, footer, menu and container div structure) and then use this custom page implementation as a base class for several differtent pages of our site.</p>
 
-<p>To create a custom TemPy tag, subclass the base <code>tempy.Tag</code> class and provide a custom <code>__tag</code> class variable</p>
+<p>All the work is made defining a custom <code>init</code> method. This method will be called when creating new instances of our class, the concept is similar to Python&#39;s <code>__init__</code> magic method. TemPy executes each base class <code>init</code> method in reverse mro, so your subclass can access all the elements defined in his parent classes. It&#39; like the first thing every <code>init</code> does is calling <code>super().init</code>.</p>
 
-<pre>
+<p><strong>Custom tags</strong>
+It&#39;s possible to create easily custom html tags, just subclass the <code>tempy.Tag</code> (or <code>tempy.VoidTag</code> for void tags) class and define a custom <code>__tag</code> class variable</p>
 
-
-</pre>
+<p><code id='lefty-code'>class CustomTag(tempy.Tag):
+    __tag = &#39;my_own_tag&#39;
+CustomTag().render()
+&gt;&gt;&gt; &lt;my_own_tag&gt;&lt;/my_own_tag&gt;
+</code>
+<code id='lefty-code'>
+class CustomVoidTag(CustomTag, VoidTag): pass
+CustomTag().render()
+&gt;&gt;&gt; &lt;/my_own_tag&gt;
+</code></p>
 <h2 id='tempy-repr-39-s'>TemPy repr&#39;s</h2><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s">'foo'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bar</span> <span class="o">=</span> <span class="s">'bar'</span>
-
-    <span class="k">class</span> <span class="nc">HtmlREPR</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="p">(</span>
-                <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">foo</span><span class="p">),</span>
-                <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
-            <span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s">'foo'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bar</span> <span class="o">=</span> <span class="s">'bar'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s">'www.foobar.com'</span>
 
-    <span class="c"># If an instance on MyClass is found inside a div</span>
     <span class="k">class</span> <span class="nc">Div</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c"># When a MyClass is placed inside a &lt;div&gt; tag, we add 2 other divs inside with some of our MyClass instance values</span>
             <span class="bp">self</span><span class="p">(</span>
                 <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">foo</span><span class="p">),</span>
                 <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
             <span class="p">)</span>
 
-    <span class="c"># If an instance on MyClass is found inside a link</span>
+    <span class="k">class</span> <span class="nc">HtmlREPR</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c"># We can use HtmlREPR as a fallback for html representation</span>
+            <span class="bp">self</span><span class="p">(</span>
+                <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">foo</span><span class="p">),</span>
+                <span class="n">Div</span><span class="p">()(</span><span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
+            <span class="p">)</span>
+
     <span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c"># note: This TempyREPR will be used when placing an instance of MyClass inside a Tempy A instance</span>
+            <span class="c"># self here will be the instance of MyClass but using the TemPy api we can modify the parent &lt;a&gt; tag</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">'href'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">link</span>
             <span class="bp">self</span><span class="p">(</span><span class="s">'Link to '</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
 
-    <span class="c"># If an instance on MyClass is found inside a table cell</span>
     <span class="k">class</span> <span class="nc">Td</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c"># we define a custom representation when a MyClass is placed inside a &lt;td&gt;</span>
             <span class="bp">self</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
 
-    <span class="c"># If an instance on MyClass is found when rendering the a TempyPage called 'HomePage'</span>
     <span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">TempyREPR</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c"># note: here self is the object's parent, not the root</span>
+        <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c"># HomePage is supposed to be the name of the TemPy root used to rendere the home page</span>
+            <span class="c"># when a MyClass is placed anywhere inside the home page this repr will be used</span>
+            <span class="c"># note: here self is the object's parent, not the root</span>
             <span class="bp">self</span><span class="p">(</span><span class="s">'Hello World, this is bar: '</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
 
 
@@ -610,7 +635,8 @@ python3 setup.py install
 
 <span class="n">A</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using A(TempyREPR) nested class</span>
 
-<span class="n">Table</span><span class="p">()(</span><span class="n">Tr</span><span class="p">()(</span><span class="n">Td</span><span class="p">()(</span><span class="n">my_instance</span><span class="p">)))</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># my_instance is rendered using Td(TempyREPR) nested class</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">MyClass</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">Table</span><span class="p">()(</span><span class="n">Tr</span><span class="p">()(</span><span class="n">Td</span><span class="p">()(</span><span class="n">instance</span><span class="p">))</span> <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">my_class_list</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c"># Td(TempyREPR) is used.</span>
 
 <span class="k">class</span> <span class="nc">HomePage</span><span class="p">(</span><span class="n">Html</span><span class="p">):</span> <span class="k">pass</span>
 
@@ -628,9 +654,9 @@ python3 setup.py install
 <p>You can think the <code>TempyREPR</code> nested class as a <code>__repr__</code> magic method equivalent: TemPy uses the <code>TempyREPR</code> nested class to represent objects just like Python uses the <code>__repr__</code> method.</p>
 
 <p>When an object is placed inside a tree TemPy searches for a <code>TempyREPR</code> class inside this object, if it&#39;s found, the <code>repr</code> method of this class is used as a template.
-The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only argument, with a little magic this <code>self</code> is both your object and the tree element, so all the common TemPy API is usable and your object attributes are accessible using <code>self</code>.</p>
+The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only argument, with a little magic this <code>self</code> is both your object and the tree element, so the TemPy API is avaiable and your object attributes are accessible using <code>self</code>.</p>
 
-<p>You can define several <code>TempyREPR</code> nested classes, when dealing with non-TemPy object TemPy will search for a <code>TempyREPR</code> subclass following this priority:</p>
+<p>You can define several <code>TempyREPR</code> nested classes, TemPy will search for a <code>TempyREPR</code> subclass following this priority order:</p>
 
 <ol>
 <li>a <code>TempyREPR</code> subclass with the same name of his TemPy container</li>
@@ -640,7 +666,67 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 <li>if none of the previous if found, the object will be rendered calling his <code>__str__</code> method</li>
 </ol>
 
-<p>You can use this order to set different renderings for different situation/pages.</p>
+<p>You can use this order to set different renderings for different situation/pages. Here is an example of how <code>TempyREPR</code> would work with SQLAlchemy models:</p>
+
+<p><code id='lefty-code'>from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
+</code>
+<code id='lefty-code'>
+class Department(Base):
+    <strong>tablename</strong> = &#39;department&#39;
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+</code>
+<code id='lefty-code'>    class HtmlREPR(TempyREPR):
+        def repr(self):
+            self.attr(klass=&#39;department&#39;)
+            self(self.name.title())
+</code>
+<code id='lefty-code'>
+class Employee(Base):
+    <strong>tablename</strong> = &#39;employee&#39;
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    hired_on = Column(DateTime, default=func.now())
+    department_id = Column(Integer, ForeignKey(&#39;department.id&#39;))
+    department = relationship(
+        Department,
+        backref=backref(&#39;employees&#39;,
+                         uselist=True,
+                         cascade=&#39;delete,all&#39;))
+</code>
+<code id='lefty-code'>    class Table(TempyREPR):
+        def repr(self):
+            self(
+                Tr()(
+                    Td()(self.id),
+                    Td()(self.name),
+                    Td()(self.hired_on.strftime(&#39;%Y-%m-%d&#39;))
+                )
+            )
+</code>
+<code id='lefty-code'>    class EmployeePage(TempyREPR):
+        def repr(self):
+            self(
+                Div(klass=&#39;employee&#39;)(
+                    Div()(&#39;Name: &#39;, self.name),
+                    Div()(&#39;Department: &#39;, self.department),
+                )
+            )
+</code></p>
+
+<p>Adding one or more <code>TempyREPR</code> into your models will provide the ability to just put instances of those models inside the DOM directly, and they will be rendered according to they&#39;re location.</p>
+
+<p>So making a table of employees will be very easy:
+<code id='lefty-code'>from tempy.tags import Table
+employees_table = Table()(Employee.query.all())</code></p>
+
+<p>And making a employee page will be easy as well:
+<code id='lefty-code'>from tempy.widgest import TempyPage
+page = TempyPage().body(Employee.query.first())
+</code></p>
 <h1 id='tempy-ojects'>TemPy ojects</h1><h2 id='tag-creation'>Tag Creation</h2><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
 <span class="n">div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 
@@ -693,8 +779,37 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 <li>called with a dict as the only unnamed argument will <code>dict.update</code> the element&#39;s style with the given imput: <code>Div().css({&#39;color&#39;: &#39;white&#39;})</code></li>
 <li>called with kwargs will <code>dict.update</code> the element&#39;s style with the given kwargs: <code>Div().css(color=&#39;white&#39;)</code></li>
 </ul>
-<h2 id='building-the-dom'>Building the DOM</h2><pre class="highlight python tab-python"><code><span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
+<h2 id='building-the-dom'>Building the DOM</h2><pre class="highlight python tab-python"><code><span class="n">page</span> <span class="o">=</span> <span class="n">Html</span><span class="p">()</span>
+
+<span class="c"># single insertion</span>
+<span class="n">page</span><span class="p">(</span><span class="n">Head</span><span class="p">())</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+
+<span class="c"># list insertion</span>
+<span class="n">page</span><span class="p">([</span><span class="n">Div</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+
+<span class="c"># insertion from generator</span>
+<span class="n">page</span><span class="p">(</span><span class="n">Span</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+
+<span class="c"># named insertion</span>
+<span class="n">page</span><span class="p">(</span><span class="n">some_name</span><span class="o">=</span><span class="s">'some content'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;</span><span class="n">some</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+<span class="n">page</span><span class="o">.</span><span class="n">some_content</span> <span class="o">=</span> <span class="s">'some other content'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;</span><span class="n">some</span> <span class="n">other</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+
+<span class="c"># mixing up</span>
+<span class="n">Html</span><span class="p">()(</span>
+    <span class="n">Head</span><span class="p">()(</span>
+        <span class="n">Title</span><span class="p">()(</span><span class="s">'Page title'</span><span class="p">)</span>
+    <span class="p">),</span>
+    <span class="n">body</span><span class="o">=</span><span class="n">Body</span><span class="p">()(</span>
+        <span class="s">'Hello world!'</span><span class="p">,</span>
+        <span class="s">'Here some multiplications! '</span><span class="p">,</span>
+        <span class="n">interesting_data</span><span class="o">=</span><span class="p">[</span><span class="n">Div</span><span class="p">()(</span><span class="n">n</span> <span class="o">*</span> <span class="n">n2</span> <span class="k">for</span> <span class="n">n2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 </code></pre><pre class="highlight python tab-python"><code><span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">()</span>
 <span class="n">page</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
@@ -709,93 +824,113 @@ The <code>TempyREPR.repr</code> method accepts <code>self</code> as the only arg
 <span class="n">page</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
 </code></pre>
-<p>Add elements or content by calling them like a function...</p>
+<p>Add TemPy elements end content to a TemPy object by calling this objects like a function. Every call will place the elements at the end of the container&#39;s children list.</p>
 
-<blockquote>
-<p>page(Head())</p>
-</blockquote>
+<p>It&#39;s possible to feed a TemPy object with a single element, a list of element, or a generator of elements. Insertion can also be done giving names to a particular child, so it can bew accessed later by name like an attribute of his container element.</p>
 
 <aside class="warning">
 Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because kwargs are ordered)
 </aside>
 
-<p>...or use one of the jQuery-like apis:</p>
+<p>Insertion can be mixed, but named insertion can not be before an unnamed insertion.</p>
 
-<p>...same for removing:</p>
-<h2 id='traversing-the-dom'>Traversing the DOM</h2><pre class="highlight python tab-python"><code><span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
+<p>Another way to manipulate the DOM is to use one of the jQuery-like api.</p>
+
+<table><thead>
+<tr>
+<th>api</th>
+<th>action</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>div1.after(div2)</td>
+<td>div1 will be the sibling next to div2 inside div2&#39;s container</td>
+</tr>
+<tr>
+<td>div1.before(div2)</td>
+<td>div1 will be the sibling before div2 inside div2&#39;s container</td>
+</tr>
+<tr>
+<td>div1.prepend(div2)</td>
+<td>div2 will be the first child of div1</td>
+</tr>
+<tr>
+<td>div1.prepend_to(div2)</td>
+<td>div1 will be the first child of div2</td>
+</tr>
+<tr>
+<td>div1.append(div2)</td>
+<td>div2 will be the last child of div1</td>
+</tr>
+<tr>
+<td>div1.append_to(div2)</td>
+<td>div1 will be the list child of div2</td>
+</tr>
+<tr>
+<td>div1.wrap(div2)</td>
+<td>div1 will be the only child of div2</td>
+</tr>
+<tr>
+<td>div1.wrap_inner(div2)</td>
+<td>div1 will be added between div2 and his previous parent</td>
+</tr>
+<tr>
+<td>div1.replace_with(div2)</td>
+<td>elements will be swapped</td>
+</tr>
+<tr>
+<td>div1.remove(div2)</td>
+<td>div2 will be removed from div1</td>
+</tr>
+<tr>
+<td>div1.move_childs(div2)</td>
+<td>all the childs of div1 will be moved to div2</td>
+</tr>
+<tr>
+<td>div1.move(div2)</td>
+<td>div1 will be detached from his father and moved inside div2</td>
+</tr>
+<tr>
+<td>div1.pop()</td>
+<td>pop by index from div1 childs</td>
+</tr>
+<tr>
+<td>div1.empty()</td>
+<td>deletes all div1 childs.</td>
+</tr>
+</tbody></table>
+<h2 id='traversing-the-dom'>Traversing the DOM</h2><pre class="highlight python tab-python"><code><span class="n">container</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span><span class="n">Span</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">span</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
+    <span class="n">span</span><span class="p">(</span><span class="s">'some text'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;</span><span class="n">some</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;</span><span class="n">some</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre><pre class="highlight python tab-python"><code><span class="n">container</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()(</span><span class="n">Span</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">container</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="s">'some text'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="o">&gt;</span><span class="n">some</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre><pre class="highlight python tab-python"><code><span class="n">container_div</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
 <span class="n">container_div</span><span class="p">(</span><span class="n">content_div</span><span class="o">=</span><span class="n">Div</span><span class="p">())</span>
 
 <span class="n">container_div</span><span class="o">.</span><span class="n">content_div</span><span class="p">(</span><span class="s">'Some content'</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;&lt;</span><span class="n">div</span><span class="o">&gt;</span><span class="n">Some</span> <span class="n">content</span><span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="n">container_div</span><span class="o">.</span><span class="n">children</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="nb">next</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">prev</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">prev_all</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
-<span class="n">container_div</span><span class="o">.</span><span class="nb">slice</span><span class="p">()</span>
 </code></pre>
-<p>Every TemPy Tag content is iterable and accessible like a Python list:</p>
+<p>Every TemPy Tag is iterable and accessible like a Python list, iteration over a TemPy object is an iteration over his childs.</p>
 
-<p>...or access elements inside a container as if it they were attributes:</p>
+<p>It&#39;s also possible to access some child by name, as if they&#39;re attributes of the parent.</p>
 
-<p>..or if you feel jQuery-ish you can use:</p>
-<h1 id='api-reference'>API Reference</h1><pre class="highlight python tab-python"><code><span class="n">div1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
-<span class="n">div2</span> <span class="o">=</span> <span class="n">Div</span><span class="p">()</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">prepend</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">prepend_to</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">append_to</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">wrap_inner</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">move_childs</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">children</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">contents</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">last</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="nb">next</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">next_all</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">prev</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">prev_all</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="n">siblings</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-<span class="n">div1</span><span class="o">.</span><span class="nb">slice</span><span class="p">(</span><span class="n">div2</span><span class="p">)</span>
-</code></pre>
-<p>Several api&#39;s are provided to modify you&#39;re existing DOM elements:</p>
+<p>A jQuery-ish is given to access TemPy instance&#39;s childs:
+<code id='lefty-code'>container_div.children()
+container_div.first()
+container_div.last()
+container_div.next()
+container_div.next_all()
+container_div.prev()
+container_div.prev_all()
+container_div.parent()
+container_div.slice(from_index, to_index)
+</code></p>
+<h1 id='api-reference'>API Reference</h1>
+<p>Several api&#39;s are provided to modify you&#39;re existing DOM elements, docs ASAP.</p>
 
-<ul>
-<li>after() - </li>
-<li>before() - </li>
-<li>prepend() - </li>
-<li>prepend_to() - </li>
-<li>append() - </li>
-<li>append_to() - </li>
-<li>wrap() - </li>
-<li>wrap_inner() - </li>
-<li>replace_with() - </li>
-<li>remove() - </li>
-<li>move_childs() - </li>
-<li>move() - </li>
-<li>pop() - </li>
-<li>empty() - </li>
-<li>children() - </li>
-<li>contents() - </li>
-<li>first() - </li>
-<li>last() - </li>
-<li>next() - </li>
-<li>next_all() - </li>
-<li>prev() - </li>
-<li>prev_all() - </li>
-<li>siblings() - </li>
-<li>slice() - </li>
-</ul>
+<p>For now open your consolle and <code>help(tempy.Tag)</code>.</p>
 <h1 id='credits'>Credits</h1><h2 id='made-and-mantained-by-federico-cerchiari'>Made and mantained by Federico Cerchiari</h2>
 <p>Get in touch on GitHub: <a href="https://github.com/Hrabal">Hrabal</a></p>
 
