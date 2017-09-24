@@ -611,3 +611,12 @@ html, body {
 .highlight, .highlight .w {
   background-color: $code-bg;
 }
+
+#lefty-code {
+    display: block;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
+    background-color: #1E2224;
+    color: #fff;
+}

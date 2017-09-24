@@ -146,15 +146,15 @@ TemPy tags can have attributes, that will be rendered inside the tag, it's possi
 
 Once a TemPy tag or widget is instantiated you can add tags and content by calling the instance as if it's a function: `div(Span())`. Element creation and insertion can be performed in a single instruction: `Div()(Span())`.
 
-It's possible to add multiple elements inside another and every TemPy object accepts different kind of element insertion:
+It's possible to add elements inside TemPy objects:
 
-* single insertion: `Div()(Span())`
-* list insertion: `Div()(['something', Span(), 1])`
-* insetion from a generator: `Div()(Span() for _ in range(5))`
-* named insertion: `Div()(some_child=Span())`
-* using the TemPy objects's API: `Div().append((Span())` *see below for a complete API listing*
+* single objects: `Div()(Span())`
+* lists: `Div()(['something', Span(), 1])`
+* generators: `Div()(Span() for _ in range(5))`
+* single objects with a name (so they can be accessed by name later): `Div()(some_child=Span())`
+* or using the TemPy objects's API: `Div().append((Span())` *see below for a complete API listing*
 
-<aside class="warning">Attention: named insertion is safe only when using Python >= 3.6</aside>
+<aside class="warning">Attention: named insertion is safe only using Python >= 3.6</aside>
 
 HTML tags have attributes, and so TemPy tags have too. It's possible to define tag attributes in different ways:
 
@@ -162,10 +162,10 @@ HTML tags have attributes, and so TemPy tags have too. It's possible to define t
 * usind the `attr` API: `Div().attr(some_attribute='some_value')`
 
 
-The resulting tree (in fact, the DOM), can be rendered by calling the `.render()` method.
+The resulting tree is the DOM, and can be rendered by calling the `.render()` method.
 
 Calling `render` on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
-`render` will be called on every TemPy child, and `str()` will be called on every non-TemPy child.
+`TemPyChild.render()` will be called on every TemPy child, and `str(child)` will be called on every non-TemPy child.
 
 ## Blocks and Content
 
@@ -208,13 +208,38 @@ TemPy lets you build blocks and put them together using the manipulation api, ea
 
 Static parts of pages can be created once an then used in different pages. Blocks can be created and imported as normal Python objects.
 
-<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy class instance used in various pages, this will remain modified in every page and in every subsequent request.</aside>
+<aside class="warning">Depending on the web framework you use, TemPy instances can be shared between http requests. Keep in mind that if you modify a TemPy instance used in various pages, this will be modified in every page and in every subsequent request.</aside>
 
-To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy's `Content` class. Those elements are just containers with no html representation, at render time his childs will be rendered inside the `Content`'s father.
+To make a Block a dynamic, so it can contain different contents each request/use, we can use TemPy's `Content` class.
 
-`Content` can have a fixed content so it can be used as 'html invisible box' (this fixed content can, however, be dynamic), or it can just have a name.
+Those elements are just containers with no html representation, at render time his childs will be rendered inside the `Content`'s father. `Content` can have a fixed content so it can be used as 'html invisible box' (this fixed content can, however, be dynamic), or it can just have a name.
 
 Every TemPy objects can contain extra data that will not be rendered, you can manage this extra data with the `TemPyClass.data()` api as if it's a common dictionary. At render time TemPy will search into the extra data of the `Content` container, and recursively into his parents, looking for a key matching the `Content`'s name. If it's found then it's value is used in rendering.
+
+<code id='lefty-code'>container = Div()(
+    Content(content='This is a fixed content')
+)
+container.render()
+&gt;&gt;&gt; &lt;div&gt;This is a fixed content&lt;/div&gt;
+</code>
+
+<code id='lefty-code'>container = Div()(
+    Content('a_content_name')
+)
+container.data({'a_content_name': 'This is dynamic content'})
+container.render()
+&gt;&gt;&gt; &lt;div&gt;This is dynamic content&lt;/div&gt;
+</code>
+
+<code id='lefty-code'>root_container = Span()
+container = Div()(
+    Content('a_content_name')
+)
+root_container.append(container)
+root_container.inject({'a_content_name': 'This is dynamic content'})
+root_container.render()
+&gt;&gt;&gt; &lt;span&gt;&lt;div&gt;This is dynamic content&lt;/div&gt;&lt;/span&gt;
+</code>
 
 ## OOT - Object Oriented Templating
 
@@ -269,9 +294,6 @@ class BasePage(TempyPage):
                 for mi in Menu.query.filter_by(active=True, menu=typ
                                                ).order_by(Menu.order).all()]
 
-```
-
-```python
 class HomePage(BasePage):
 
     def init(self):
@@ -282,7 +304,7 @@ class HomePage(BasePage):
                 H3()('Hame page important content'),
                 'Look, I\'m a string!', Br(),
                 H3()('H3 is big, really big'),
-                H1()('Today's content:'),
+                H1()('Today\'s content:'),
                 self.get_dynamic_content()
             )
         )
@@ -297,30 +319,25 @@ class HomePage(BasePage):
                      Div()(comment for comment in current_content.comments))
 ```
 
-```python
-class CustomTag(tempy.Tag):
-    __tag = 'my_own_tag'
-
-CustomTag().render()
->>> <my_own_tag></my_own_tag>
-
-class CustomVoidTag(CustomTag, VoidTag): pass
-CustomTag().render()
->>> </my_own_tag>
-```
-
 TemPy is designed to provide Object Oriented Templating. You can subclass TemPy classes and define their inner tree structure, and also add custom methods.
 
+For example we can define a basic `tempy.tags.Html` subclass where we define the basic shared page structure (i.e: header, footer, menu and container div structure) and then use this custom page implementation as a base class for several differtent pages of our site.
 
+All the work is made defining a custom `init` method. This method will be called when creating new instances of our class, the concept is similar to Python's `__init__` magic method. TemPy executes each base class `init` method in reverse mro, so your subclass can access all the elements defined in his parent classes. It' like the first thing every `init` does is calling `super().init`.
 
-TemPy executes each base class `init` method in reverse mro, so your subclass can access all the elements defined in his parent classes.
+**Custom tags**
+It's possible to create easily custom html tags, just subclass the `tempy.Tag` (or `tempy.VoidTag` for void tags) class and define a custom `__tag` class variable
 
-To create a custom TemPy tag, subclass the base `tempy.Tag` class and provide a custom `__tag` class variable
-
-<pre>
-
-
-</pre>
+<code id='lefty-code'>class CustomTag(tempy.Tag):
+    __tag = 'my_own_tag'
+CustomTag().render()
+&gt;&gt;&gt; &lt;my_own_tag&gt;&lt;/my_own_tag&gt;
+</code>
+<code id='lefty-code'>
+class CustomVoidTag(CustomTag, VoidTag): pass
+CustomTag().render()
+&gt;&gt;&gt; &lt;/my_own_tag&gt;
+</code>
 
 ## TemPy repr's
 
@@ -329,44 +346,41 @@ class MyClass:
     def __init__(self):
         self.foo = 'foo'
         self.bar = 'bar'
+        self.link = 'www.foobar.com'
+    
+    class Div(TempyREPR):
+        def repr(self):
+            # When a MyClass is placed inside a <div> tag, we add 2 other divs inside with some of our MyClass instance values
+            self(
+                Div()(self.foo),
+                Div()(self.bar)
+            )
 
     class HtmlREPR(TempyREPR):
         def repr(self):
-            self(
-                Div()(self.foo),
-                Div()(self.bar)
-            )
-```
-
-```python
-class MyClass:
-    def __init__(self):
-        self.foo = 'foo'
-        self.bar = 'bar'
-        self.link = 'www.foobar.com'
-    
-    # If an instance on MyClass is found inside a div
-    class Div(TempyREPR):
-        def repr(self):
+            # We can use HtmlREPR as a fallback for html representation
             self(
                 Div()(self.foo),
                 Div()(self.bar)
             )
     
-    # If an instance on MyClass is found inside a link
     class A(TempyREPR):
         def repr(self):
+            # note: This TempyREPR will be used when placing an instance of MyClass inside a Tempy A instance
+            # self here will be the instance of MyClass but using the TemPy api we can modify the parent <a> tag
             self.parent.attrs['href'] = self.link
             self('Link to ', self.bar)
 
-    # If an instance on MyClass is found inside a table cell
     class Td(TempyREPR):
         def repr(self):
+            # we define a custom representation when a MyClass is placed inside a <td>
             self(self.bar.upper())
     
-    # If an instance on MyClass is found when rendering the a TempyPage called 'HomePage'
     class HomePage(TempyREPR):
-        def repr(self):  # note: here self is the object's parent, not the root
+        def repr(self):
+            # HomePage is supposed to be the name of the TemPy root used to rendere the home page
+            # when a MyClass is placed anywhere inside the home page this repr will be used
+            # note: here self is the object's parent, not the root
             self('Hello World, this is bar: ', self.bar)
 
 
@@ -376,7 +390,8 @@ Div()(my_instance).render()  # my_instance is rendered using Div(TempyREPR) nest
 
 A()(my_instance).render()  # my_instance is rendered using A(TempyREPR) nested class
 
-Table()(Tr()(Td()(my_instance))).render()  # my_instance is rendered using Td(TempyREPR) nested class
+my_list = [MyClass() for _ in range 10]
+Table()(Tr()(Td()(instance)) for instance in my_class_list).render()  # Td(TempyREPR) is used.
 
 class HomePage(Html): pass
 
@@ -395,9 +410,9 @@ Another way to use TemPy is to define a nested `TempyREPR` subclass inside your 
 You can think the `TempyREPR` nested class as a `__repr__` magic method equivalent: TemPy uses the `TempyREPR` nested class to represent objects just like Python uses the `__repr__` method.
 
 When an object is placed inside a tree TemPy searches for a `TempyREPR` class inside this object, if it's found, the `repr` method of this class is used as a template.
-The `TempyREPR.repr` method accepts `self` as the only argument, with a little magic this `self` is both your object and the tree element, so all the common TemPy API is usable and your object attributes are accessible using `self`.
+The `TempyREPR.repr` method accepts `self` as the only argument, with a little magic this `self` is both your object and the tree element, so the TemPy API is avaiable and your object attributes are accessible using `self`.
 
-You can define several `TempyREPR` nested classes, when dealing with non-TemPy object TemPy will search for a `TempyREPR` subclass following this priority:
+You can define several `TempyREPR` nested classes, TemPy will search for a `TempyREPR` subclass following this priority order:
 
 1. a `TempyREPR` subclass with the same name of his TemPy container
 2. a `TempyREPR` subclass with the same name of his TemPy container's root
@@ -405,7 +420,68 @@ You can define several `TempyREPR` nested classes, when dealing with non-TemPy o
 4. the first `TempyREPR` found.
 5. if none of the previous if found, the object will be rendered calling his `__str__` method
 
-You can use this order to set different renderings for different situation/pages.
+You can use this order to set different renderings for different situation/pages. Here is an example of how `TempyREPR` would work with SQLAlchemy models:
+
+<code id='lefty-code'>from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
+</code>
+<code id='lefty-code'>
+class Department(Base):
+    __tablename__ = 'department'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+</code>
+<code id='lefty-code'>    class HtmlREPR(TempyREPR):
+        def repr(self):
+            self.attr(klass='department')
+            self(self.name.title())
+</code>
+<code id='lefty-code'>
+class Employee(Base):
+    __tablename__ = 'employee'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    hired_on = Column(DateTime, default=func.now())
+    department_id = Column(Integer, ForeignKey('department.id'))
+    department = relationship(
+        Department,
+        backref=backref('employees',
+                         uselist=True,
+                         cascade='delete,all'))
+</code>
+<code id='lefty-code'>    class Table(TempyREPR):
+        def repr(self):
+            self(
+                Tr()(
+                    Td()(self.id),
+                    Td()(self.name),
+                    Td()(self.hired_on.strftime('%Y-%m-%d'))
+                )
+            )
+</code>
+<code id='lefty-code'>    class EmployeePage(TempyREPR):
+        def repr(self):
+            self(
+                Div(klass='employee')(
+                    Div()('Name: ', self.name),
+                    Div()('Department: ', self.department),
+                )
+            )
+</code>
+
+Adding one or more `TempyREPR` into your models will provide the ability to just put instances of those models inside the DOM directly, and they will be rendered according to they're location.
+
+So making a table of employees will be very easy:
+<code id='lefty-code'>from tempy.tags import Table
+employees_table = Table()(Employee.query.all())</code>
+
+And making a employee page will be easy as well:
+<code id='lefty-code'>from tempy.widgest import TempyPage
+page = TempyPage().body(Employee.query.first())
+</code>
+
 
 # TemPy ojects
 
@@ -473,8 +549,37 @@ The `css` method mimic the jQuery's brother behavior:
 ## Building the DOM
 
 ```python
+page = Html()
+
+# single insertion
 page(Head())
 >>> <html><head></head></html>
+
+# list insertion
+page([Div() for _ in range(2)])
+>>> <html><head></head><div></div><div></div></html>
+
+# insertion from generator
+page(Span() for _ in range(2))
+>>> <html><head></head><div></div><div></div><span></span><span></span></html>
+
+# named insertion
+page(some_name='some content')
+>>> <html><head></head><div></div><div></div><span></span><span></span>some content</html>
+page.some_content = 'some other content'
+>>> <html><head></head><div></div><div></div><span></span><span></span>some other content</html>
+
+# mixing up
+Html()(
+    Head()(
+        Title()('Page title')
+    ),
+    body=Body()(
+        'Hello world!',
+        'Here some multiplications! ',
+        interesting_data=[Div()(n * n2 for n2 in range(10)) for n in range(10)]
+    )
+)
 ```
 
 ```python
@@ -496,20 +601,49 @@ page.pop()
 >>> <html></html>
 ```
 
+Add TemPy elements end content to a TemPy object by calling this objects like a function. Every call will place the elements at the end of the container's children list.
 
-Add elements or content by calling them like a function...
-
-> page(Head())
+It's possible to feed a TemPy object with a single element, a list of element, or a generator of elements. Insertion can also be done giving names to a particular child, so it can bew accessed later by name like an attribute of his container element.
 
 <aside class="warning">
 Correct ordering with named Tag insertion is ensured with Python >= 3.6 (because kwargs are ordered)
 </aside>
 
-...or use one of the jQuery-like apis:
+Insertion can be mixed, but named insertion can not be before an unnamed insertion.
 
-...same for removing:
+Another way to manipulate the DOM is to use one of the jQuery-like api.
+
+api | action 
+-------------- | --------------
+div1.after(div2) | div1 will be the sibling next to div2 inside div2's container | div1
+div1.before(div2) | div1 will be the sibling before div2 inside div2's container | div1
+div1.prepend(div2) | div2 will be the first child of div1 | div1
+div1.prepend_to(div2) | div1 will be the first child of div2 | div1
+div1.append(div2) | div2 will be the last child of div1 | div1
+div1.append_to(div2) | div1 will be the list child of div2 | div1
+div1.wrap(div2) | div1 will be the only child of div2
+div1.wrap_inner(div2) | div1 will be added between div2 and his previous parent
+div1.replace_with(div2) | elements will be swapped
+div1.remove(div2) | div2 will be removed from div1
+div1.move_childs(div2) | all the childs of div1 will be moved to div2
+div1.move(div2) | div1 will be detached from his father and moved inside div2
+div1.pop() | pop by index from div1 childs
+div1.empty() | deletes all div1 childs.
 
 ## Traversing the DOM
+```python
+container = Div()(Span() for _ in range(2))
+for span in container:
+    span('some text')
+>>> <div><span>some text</span><span>some text</span></div>
+```
+
+```python
+container = Div()(Span() for _ in range(2))
+container[1]('some text')
+>>> <div><span></span><span>some text</span></div>
+```
+
 ```python
 container_div = Div()
 container_div(content_div=Div())
@@ -518,81 +652,27 @@ container_div.content_div('Some content')
 >>> <div><div>Some content</div></div>
 ```
 
-```python
-container_div.children()
+Every TemPy Tag is iterable and accessible like a Python list, iteration over a TemPy object is an iteration over his childs.
+
+It's also possible to access some child by name, as if they're attributes of the parent.
+
+A jQuery-ish is given to access TemPy instance's childs:
+<code id='lefty-code'>container_div.children()
 container_div.first()
 container_div.last()
 container_div.next()
+container_div.next_all()
 container_div.prev()
 container_div.prev_all()
 container_div.parent()
-container_div.slice()
-```
-
-Every TemPy Tag content is iterable and accessible like a Python list:
-
-...or access elements inside a container as if it they were attributes:
-
-..or if you feel jQuery-ish you can use:
-
+container_div.slice(from_index, to_index)
+</code>
 
 # API Reference
 
-```python
-div1 = Div()
-div2 = Div()
-div1.after(div2)
-div1.before(div2)
-div1.prepend(div2)
-div1.prepend_to(div2)
-div1.append(div2)
-div1.append_to(div2)
-div1.wrap(div2)
-div1.wrap_inner(div2)
-div1.replace_with(div2)
-div1.remove(div2)
-div1.move_childs(div2)
-div1.move(div2)
-div1.pop(div2)
-div1.empty(div2)
-div1.children(div2)
-div1.contents(div2)
-div1.first(div2)
-div1.last(div2)
-div1.next(div2)
-div1.next_all(div2)
-div1.prev(div2)
-div1.prev_all(div2)
-div1.siblings(div2)
-div1.slice(div2)
-```
+Several api's are provided to modify you're existing DOM elements, docs ASAP.
 
-Several api's are provided to modify you're existing DOM elements:
-
-* after() - 
-* before() - 
-* prepend() - 
-* prepend_to() - 
-* append() - 
-* append_to() - 
-* wrap() - 
-* wrap_inner() - 
-* replace_with() - 
-* remove() - 
-* move_childs() - 
-* move() - 
-* pop() - 
-* empty() - 
-* children() - 
-* contents() - 
-* first() - 
-* last() - 
-* next() - 
-* next_all() - 
-* prev() - 
-* prev_all() - 
-* siblings() - 
-* slice() - 
+For now open your consolle and `help(tempy.Tag)`.
 
 # Credits
 
