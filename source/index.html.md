@@ -165,7 +165,14 @@ HTML tags have attributes, and so TemPy tags have too. It's possible to define t
 The resulting tree is the DOM, and can be rendered by calling the `.render()` method.
 
 Calling `render` on some TemPy object will return the html representation of the tree starting from the current element including all the childs.
-`TemPyChild.render()` will be called on every TemPy child, and `str(child)` will be called on every non-TemPy child.
+`tempy_object.render()` will:
+* render `tempy_object` own tag, with foud tag attributes
+* loop over `tempy_object` childs to retrieve the tag inner content, for every child:
+  * a valid `TempyREPR` is searched inside the child class definition, if found it's used.
+  * a `render` method will be searched and called if present into the child object.
+  * if the object is a subclass of `Escaped`, the `Escaped`'s content is returned
+  * if no other contition is met, `str()` will be called on the child
+* evry content found will be joined using ''.join()
 
 ## Blocks and Content
 
@@ -204,6 +211,15 @@ def my_content_controller(url='/content'):
     return content_page.render(header=header, content=content)
 ```
 
+```python
+from tempy import Escaped
+
+_ = Div()(Escaped("""<p>
+here is some html I had in my closet
+</p>
+"""))
+```
+
 TemPy lets you build blocks and put them together using the manipulation api, each TemPy object can be used later inside another TemPy object.
 
 Static parts of pages can be created once an then used in different pages. Blocks can be created and imported as normal Python objects.
@@ -240,6 +256,8 @@ root_container.inject({'a_content_name': 'This is dynamic content'})
 root_container.render()
 &gt;&gt;&gt; &lt;span&gt;&lt;div&gt;This is dynamic content&lt;/div&gt;&lt;/span&gt;
 </code>
+
+Another special TemPy class is the `Escaped` class. With this class you can add content that will not be html escaped, it's useful to inject plain html blocks (in string format) into a TemPy tree.
 
 ## OOT - Object Oriented Templating
 
