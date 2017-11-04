@@ -174,19 +174,112 @@ Calling `render` on some TemPy object will return the html representation of the
   * if no other contition is met, `str()` will be called on the child
 * evry content found will be joined using ''.join()
 
+### Tempy tags classes
+```python
+from tempy.tags import Div, Br
+
+Div.render()  # Subclass of tempy.elements.Tag
+>>> <div></div>
+
+Br.render()  # Subclass of tempy.elements.VoidTag
+>>> <br/>
+```
+```python
+from tempy.elements import Tag
+
+# Making a tag that repeats itself, whi? Because!
+class Double(Tag):
+    __tag = 'custom'
+    def render(self, *args, **kwargs):
+        return super().render() * 2
+
+Double()('content').render()
+>>> <custom>content</custom><custom>content</custom>
+```
+
+TemPy provides a class for every HTML5 element defined in the [W3C reference](https://www.w3.org/wiki/HTML/Elements), those classes can be imported from the `tempy.tags` submodule.
+Each Tempy Tag class is either a `tempy.elements.Tag` with a start and an end tag, that can contain something, or a `tempy.elements.VoidTag` that can not contain thigs and is composed of a single html tag mark.
+
+A few TemPy tags have custom behaviour:
+
+* the `tempy.tags.Comment` tag needs as first argment the comment string
+* the `tempy.tags.Doctype` tag needs as first parameter a doctype code to choose between:
+    * html
+    * html_strict
+    * html_transitional
+    * html_frameset
+    * xhtml_strict
+    * xhtml_transitional
+    * xhtml_frameset
+    * xhtml_1_1_dtd
+    * xhtml_basic_1_1
+* the `tempy.tags.Html` tag accepts the keyword argument "doctype", so it adds a Doctype tag before himself (default is "HTML" doctype)
+* a `tempy.tags.A` tag with nothing inside it will render himself with the href string iside it
+
+It's possible to define custom tag subclassing either `tempy.elements.Tag` or `tempy.elements.VoidTag` providing a custom `__tag` attribute, a custom `__template` and/or a custom `render` method.
+
+### Make Tempy tags with the T object
+```python
+from tempy import T
+from tempy.elements import Tag
+
+my_tag = T.Custom
+my_tag
+>>> <class tempy.t.Custom>
+issubclass(my_tag, Tag)
+>>> True
+my_tag().render()
+>>> <custom></custom>
+
+my_tag = T['custom with spaces']
+my_tag().render()
+>>> <custom with spaces></custom with spaces>
+
+# Same for void tags using the Void specialized class factory
+my_void_tag = T.Void.CustomVoid
+my_void_tag().render()
+>>> <customvoid/>
+```
+
+Another way to make custom tag is to use the `T` object. The T object is a multi-feature object that work as a class factory for custom tags.
+
+Accessing an attribute/key of the T object will produce a TemPy Tag (of VoidTag) subclass named after the given attribute/key (in lowercase).
+
+Classes made with `T` are subclasses of `tempy.tempy.DOMElement` and behave like any other TemPy Tag, they inherits the api and the features of TemPy objects.
+
+
+`T` can also produce TemPy tags from html strings on the fly. Using the `from_string` method it converts html strings into a list of TemPy trees:
+
+<code id='lefty-code'>from tempy import T
+html_string = '&lt;div&gt;I come from a &lt;i&gt;weird&lt;/i&gt; webservice or from an old file, &lt;b&gt;beware!&lt;/b&gt;&lt;/div&gt;'
+parsed = T.from_string(html_string)
+div = parsed[0]
+div 
+&gt;&gt;&gt; &lt;tempy.tags.Div 111803135243328262154888799873263607712. 4 childs.&gt;
+div[0]
+&gt;&gt;&gt; 'I come from a '
+div[1]
+&gt;&gt;&gt; &lt;tempy.tags.I 42050800055174656216927079271212875762. Son of Div. 1 childs.&gt;
+div[1][0]
+&gt;&gt;&gt; 'weird'
+</code>
+
+
 ## Blocks and Content
 
 ```python
 # --- file: base_elements.py
+from tempy.tags import Div, Img, Ul, Li, A
 from somewhere import links, foot_imgs
 # define some common blocks
 header = Div(klass='header')(title=Div()('My website'), logo=Img(src='img.png'))
-menu = Div(klass='menu')(Li()(A(href=link)) for link in links)
+menu = Div(klass='menu')(Ul()((Li()(A(href=link)) for link in links))
 footer = Div(klass='coolFooterClass')(Img(src=img) for img in foot_imgs)
 ```
 
 ```python
 # --- file: pages.py
+from tempy.tags import Html, Head, Body
 from base_elements import header, menu, footer
 
 # import the common blocks and use them inside your page
@@ -196,7 +289,7 @@ content_page = Html()(Head(), body=Body()(header, menu, Content('header'), Conte
 
 ```python
 # --- file: my_controller.py
-from tempy import Content
+from tempy.elements import Content
 from tempy.tags import Div
 from pages import home_page, content_page
 
@@ -342,20 +435,6 @@ TemPy is designed to provide Object Oriented Templating. You can subclass TemPy 
 For example we can define a basic `tempy.tags.Html` subclass where we define the basic shared page structure (i.e: header, footer, menu and container div structure) and then use this custom page implementation as a base class for several differtent pages of our site.
 
 All the work is made defining a custom `init` method. This method will be called when creating new instances of our class, the concept is similar to Python's `__init__` magic method. TemPy executes each base class `init` method in reverse mro, so your subclass can access all the elements defined in his parent classes. It' like the first thing every `init` does is calling `super().init`.
-
-**Custom tags**
-It's possible to create easily custom html tags, just subclass the `tempy.Tag` (or `tempy.VoidTag` for void tags) class and define a custom `__tag` class variable
-
-<code id='lefty-code'>class CustomTag(tempy.Tag):
-    __tag = 'my_own_tag'
-CustomTag().render()
-&gt;&gt;&gt; &lt;my_own_tag&gt;&lt;/my_own_tag&gt;
-</code>
-<code id='lefty-code'>
-class CustomVoidTag(CustomTag, VoidTag): pass
-CustomTag().render()
-&gt;&gt;&gt; &lt;/my_own_tag&gt;
-</code>
 
 ## TemPy repr's
 
